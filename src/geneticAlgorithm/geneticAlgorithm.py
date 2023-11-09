@@ -4,15 +4,6 @@ from src.geneticOperators import initial_population, crossover, mutate, localSea
 from src.witnessproblem import fitness
 
 
-""" Useful function for testing if we are generating invalid routes """
-def checkRoutes(graph, population):
-    for route in population:
-        totalTime = route.time[0]
-        for i in range(1, len(route.vertex)):
-            totalTime += graph.directDist(route.vertex[i-1],route.vertex[i])
-            totalTime += route.time[i]
-
-
 class GeneticAlgorithm(Algorithm):
         def __init__(self, 
                      mutation = mutate, 
