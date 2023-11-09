@@ -1,0 +1,9 @@
+.DS_Store
+*.png
+*.pyc
+*.csv
+citas/*
+.vscode/*
+.ipynb_checkpoints/*
+tests.ipynb
+tests/*
