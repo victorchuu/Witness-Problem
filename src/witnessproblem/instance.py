@@ -36,7 +36,6 @@ class Instance :
     def writeToFile(self) :
         string = self.graph.writeToFile()
         string += str(len(self.testimoniesByWitness)) + LINE_BREAK # Number of witnesses
-
         return string + LINE_BREAK.join([
                 str(len(testimonies)) + LINE_BREAK + LINE_BREAK.join([t.writeToFile() for t in testimonies]) for testimonies in self.testimoniesByWitness 
             ]) + LINE_BREAK

@@ -1,3 +1,4 @@
+
 class Route :
     
     def __init__(self):
@@ -23,6 +24,37 @@ class Route :
     def __len__(self):
         return len(self.vertex)
     
+    def is_valid(self, instance):
+        graph = instance.graph
+        it = RouteIterator(self)
+        u = self.vertex[0]
+        total_time = self.time[0]
+        assert self.leaveTime[0] == total_time
+        for i in range(len(self.vertex)):
+            total_time += instance.graph.directDist(u, self.vertex[i])
+            total_time += self.time[i]
+            u = self.vertex[i]
+            assert self.leaveTime[i] == total_time
+        assert total_time == instance.maxTime
+
+    def writeToFile(self) :
+        return ' '.join(map(str, self.vertex)) + '\n' + \
+               ' '.join(map(str, self.time)) + '\n' + \
+               ' '.join(map(str, self.leaveTime)) + '\n'
+    
+    def readFromFile(self, file):
+        self.vertex = [int(x) for x in file.readline().split()]
+        self.time = [int(x) for x in file.readline().split()]
+        self.leaveTime = [int(x) for x in file.readline().split()]
+
+
+
+def createStaticRoute(vertex: int, time: int):
+    route = Route()
+    route.startAt(vertex)
+    route.sleep_for(time)
+    return route
+    
 
 class RouteIterator :
     
@@ -38,6 +70,8 @@ class RouteIterator :
             copy_to.time.append(route.leaveTime[0])
             copy_to.leaveTime.append(route.leaveTime[0])
         
+    def isFinished(self, route):
+        return self.index+1 < len(route.vertex)
 
     def next(self, route, copy_to = None) :
         if self.index+1 >= len(route.vertex) :

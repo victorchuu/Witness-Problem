@@ -145,4 +145,26 @@ class Graph :
             for edge in self.adjList[source] :
                 string += f"{source} --> {edge.vertex} ({edge.vertex})\n"
         return string
+    
+    def createGridGraph(self, n: int, distance: int):
+        self.V = n*n
+        self.E = 2*2*n*(n-1)
+        self.adjList = [[] for _ in range(self.V)]
+
+        ## Horizontal paths
+        for row in range(0, self.V, n):
+            for col in range(row + 1, row + n):
+                self.adjList[col - 1].append(Edge(col, 1))
+                self.adjList[col].append(Edge(col - 1, 1))
+
+        ## Vertical paths
+        for col in range(0, n):
+            for row in range(col + n, col + self.V, n):
+                self.adjList[row - n].append(Edge(row, 1))
+                self.adjList[row].append(Edge(row - n, 1))
+
+
+        self.applyFloyd()
+
+
             

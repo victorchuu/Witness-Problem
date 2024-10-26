@@ -1,14 +1,18 @@
 from .testimonyVerifier import TestimonyVerifier
 from src.witnessproblem import Instance, Route, RouteIterator
 
-
 def truthtellingWitnesses(instance, visitedTestimonies):
     witnessMap = {}
+    visitedTestimoniesByWitness = {witnessIdx: [] for witnessIdx in range(len(instance.testimoniesByWitness))}
     for (witnessIdx, testimonyIdx) in visitedTestimonies:
-        isNegative = instance.testimoniesByWitness[witnessIdx][testimonyIdx].negative
-        if witnessIdx not in witnessMap:
-            witnessMap[witnessIdx] = 0
-        witnessMap[witnessIdx] += (-1)**isNegative # positive: +1 ,  negative: -1
+        visitedTestimoniesByWitness[witnessIdx].append(testimonyIdx)
+
+    for witnessIdx in range(len(instance.testimoniesByWitness)):
+        witnessMap[witnessIdx] = 0
+        for testimonyIdx in visitedTestimoniesByWitness[witnessIdx]:
+            isNegative = instance.testimoniesByWitness[witnessIdx][testimonyIdx].negative
+            witnessMap[witnessIdx] += (-1)**isNegative # positive: +1 ,  negative: -1
+
     return sum(1 for (witness, correct) in witnessMap.items() if correct==instance.precompute.positiveTestimoniesByWitness[witness])
 
 

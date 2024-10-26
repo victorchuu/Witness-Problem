@@ -12,7 +12,11 @@ NO_FIRST_VERTEX_PROVIDED = -1
 class GreedyTestimonies(GreedyAlgorithm):
 
 
-    def run(self, instance: Instance, src = NO_FIRST_VERTEX_PROVIDED):
+    def __init__(self, first_vertex = NO_FIRST_VERTEX_PROVIDED):
+        self.first_vertex = first_vertex
+
+
+    def run(self, instance: Instance, src = NO_FIRST_VERTEX_PROVIDED, override_initial_pop=None):
 
         # Note that the testimonies are in a hash set, thus they will be iterated in a arbitrary order. 
         # Consecutive executions of this algorithm, with the same inputs, may lead to different solutions.
@@ -20,13 +24,17 @@ class GreedyTestimonies(GreedyAlgorithm):
         self.testimonies: {Testimony} = { T 
                         for witness in instance.testimoniesByWitness 
                         for T in witness
-                        if not T.negative }
+                        if not T.negative } # Greedy algorithm only works with positive testimonies
         self.graph: Graph = instance.graph
 
+        if src == NO_FIRST_VERTEX_PROVIDED:
+            src = self.first_vertex
         if src == NO_FIRST_VERTEX_PROVIDED : 
             src = random.randint(0, instance.graph.V - 1)
 
-        return fitness(instance, self.greedyTestimonies(src))
+        best_route_found = self.greedyTestimonies(src)
+
+        return fitness(instance, best_route_found), best_route_found
     
 
     def __str__(self):

@@ -52,17 +52,25 @@ class GeneticAlgorithm(Algorithm):
             return max(bestSolutions), bestSolutions
 
 
-        def run(self, instance): 
+        def run(self, instance, override_initial_pop=[]): 
             self.instance = instance
-            population = self.initialPopulation(instance, self.populationSize)
+            if len(override_initial_pop) == 0:
+                population = self.initialPopulation(instance, self.populationSize)
+            else: 
+                population = override_initial_pop
             bestSolutions = [0]
+            best_individual_overall = None
             for i in range(self.numGenerations):    
-                population = self.iteration(population, bestSolutions, i)
-            return max(bestSolutions)
+                population, best_individual_iteration = self.iteration(population, bestSolutions, i)
+                if bestSolutions[-1] > bestSolutions[-2]:
+                    best_individual_overall = best_individual_iteration
+            return max(bestSolutions), best_individual_overall
 
 
         def iteration(self, population, bestSolutions, i):
             fitnessValues = list(map(self.fit, population))
+            best_individual_position = fitnessValues.index(max(fitnessValues))
+            best_individual = population[best_individual_position]
             bestSolutions.append(max(fitnessValues))
 
             population,fitnessValues = self.mapLocalSearchWithProbability(population, fitnessValues, self.localSearchProb(i, self.numGenerations))
@@ -73,7 +81,7 @@ class GeneticAlgorithm(Algorithm):
 
             population = self.mapMutateWithProbability(survivors + sons, self.mutationProbability)
 
-            return population
+            return population, best_individual
 
 
         def tournamentSelection(self, population, fitnessValues, numTournaments, numParticipants):

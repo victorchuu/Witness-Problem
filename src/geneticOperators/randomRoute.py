@@ -1,5 +1,4 @@
 import math
-import numpy
 import random
 
 from src.witnessproblem import Graph, Route
@@ -65,7 +64,12 @@ def random_time_to_wait(time):
     return math.floor(time * z)
     """
     # Another option is to use a geometric distribution
-    z = numpy.random.geometric(p = 0.35)-1
+    z = geometric_distribution(p = 0.35) - 1
     while z > time:
-        z = numpy.random.geometric(p = 0.35)-1
+        z = geometric_distribution(p = 0.35) - 1
     return z
+
+
+def geometric_distribution(p):
+    u = random.random()
+    return math.ceil(math.log(1 - u) / math.log(1 - p))

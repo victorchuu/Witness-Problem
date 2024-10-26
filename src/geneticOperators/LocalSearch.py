@@ -1,7 +1,7 @@
 from src.witnessproblem import Graph, Route, RouteIterator, fitness, truthtellingWitnesses
 
 
-MAX_NEIGHBOUR_DIST = 6
+MAX_NEIGHBOUR_DIST = 8
 
 
 """

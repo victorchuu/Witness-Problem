@@ -144,9 +144,21 @@ I4 = RandomInstanceGenerator(
     avg_vertex_degree = 10, 
     max_vertex_distance = 10, 
     witnesses = 250, 
-    max_testimonies_per_witness = 2, 
+    max_testimonies_per_witness = 3, 
     max_time_window = 500, 
     max_interval_length = 20, 
     max_vertices_per_testimony = 5, 
     negative_testimonies_rate = 0
+    )
+
+I5 = RandomInstanceGenerator(
+    vertices = 100, 
+    avg_vertex_degree = 10, 
+    max_vertex_distance = 10, 
+    witnesses = 1000, 
+    max_testimonies_per_witness = 5, 
+    max_time_window = 100, 
+    max_interval_length = 10, 
+    max_vertices_per_testimony = 5, 
+    negative_testimonies_rate = 0.3
     )

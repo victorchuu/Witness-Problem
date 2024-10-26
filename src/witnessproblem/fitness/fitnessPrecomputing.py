@@ -37,7 +37,7 @@ Then there will be 4 testimony events:
     - At 8, I2 closes -- open intervals = {I2}
 """
 def sortAndPrecomputeOpenIntervals(testimonyEvents: [TestimonyEvent]):
-        testimonyEvents.sort()
+        testimonyEvents.sort()    
         openIntervalsSet = set()
         for event in testimonyEvents:
             event.openIntervalsSet = openIntervalsSet.copy()

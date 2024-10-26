@@ -21,13 +21,15 @@ class GreedyDistance(GreedyAlgorithm):
         self.testimonies: {Testimony} = { T 
                         for witness in instance.testimoniesByWitness 
                         for T in witness
-                        if not T.negative }
+                        if not T.negative } # Greedy algorithm only works with positive testimonies
         self.graph: Graph = instance.graph
 
         if src == NO_FIRST_VERTEX_PROVIDED : 
             src = random.randint(0, instance.graph.V - 1)
 
-        return fitness(instance, self.greedyDistance(src))
+        best_route_found = self.greedyDistance(src)
+
+        return fitness(instance, best_route_found), best_route_found
     
 
     def greedyDistance(self, src):
