@@ -53,5 +53,5 @@ def mutate_interval(instance, route, i, j):
     if j != NO_VERTEX_SELECTED and j < len(route.vertex) :
         R.time[-1] += route.time[j]
         R.leaveTime[-1] += route.time[j]
-        it.advace_to_end(route, copy_to=R)
+        it.advance_to_end(route, copy_to=R)
     return R

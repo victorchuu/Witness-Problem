@@ -33,6 +33,6 @@ def succesor(instance: Instance, p1: Route, p2: Route) :
     graph.buildShortestRoute(src, p2.vertex[j] , p2.leaveTime[j] - leave_time , son) 
 
     it2 = RouteIterator(p2, start_at = j)
-    it2.advace_to_end(p2, copy_to=son)
+    it2.advance_to_end(p2, copy_to=son)
 
     return son

@@ -16,6 +16,7 @@ class Instance :
         self.precompute.collidingTestimoniesSet.cache_clear()
 
 
+    # TODO: Use standard formatting such as JSON
     def readFromFile(self, file) :
         self.graph.readFromFile(file)
         numWitnesses = int(file.readline())
@@ -24,6 +25,7 @@ class Instance :
         self.precompute.start(self)
 
 
+    # TODO: Use standard formatting such as JSON
     def __str__(self) : 
         string = f"{self.graph}\nNumber of witnesses: {len(self.testimoniesByWitness)}\n"
         for index, witness in enumerate(self.testimoniesByWitness) : 
@@ -33,6 +35,7 @@ class Instance :
         return string
 
 
+    # TODO: Use standard formatting such as JSON
     def writeToFile(self) :
         string = self.graph.writeToFile()
         string += str(len(self.testimoniesByWitness)) + LINE_BREAK # Number of witnesses

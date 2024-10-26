@@ -1,5 +1,6 @@
-from src.witnessproblem.route import Route, RouteIterator
+from src.witnessproblem import Route, RouteIterator
 import random
+
 
 class Testimony :
     
@@ -10,6 +11,7 @@ class Testimony :
         self.negative: bool = negative
 
 
+    # TODO: Use standard formatting such as JSON
     def readFromFile(self, file) :
         self.negative = 'N' in file.readline()
         self.possibleVertices = [int(x) for x in file.readline().split()]
@@ -17,7 +19,7 @@ class Testimony :
         self.a, self.b = int(line[0]), int(line[1])
         return self
 
-
+    # TODO: Use standard formatting such as JSON
     def writeToFile(self) :
         return f"{'N' if self.negative else 'Y'}\n{' '.join(map(str,self.possibleVertices))}\n{self.a} {self.b}"
 
@@ -29,6 +31,9 @@ class Testimony :
     def __lt__(self, other) :
         return self.a < other.a
 
+
+# Uses random, not thought to be tested
+# TODO: Move to a separate file, together with random generation stuff
 def generateIntervalTestimonies(actor_route: Route, vertex: int, a: int, b: int, probability=1):
     testimonies = []
     actor = RouteIterator(actor_route)
@@ -45,6 +50,7 @@ def generateIntervalTestimonies(actor_route: Route, vertex: int, a: int, b: int,
     return testimonies
 
 
+# TODO: Used specifically to generate "realistic instances" and should be moved together
 def generateNegativeTestimonies(testimonies: [Testimony], vertex: int, a: int, b: int):
     intervals_together = sorted([(testimony.a, testimony.b) for testimony in testimonies])
     negative_testimonies = []
