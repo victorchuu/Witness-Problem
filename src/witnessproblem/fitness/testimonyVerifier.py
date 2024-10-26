@@ -17,7 +17,7 @@ class TestimonyVerifier:
     def isTestimonyTrue(self, testimony: Testimony) :
         for vertex in testimony.possibleVertices : 
             for visitInterval in self.visitsByVertex[vertex] : 
-                if not visitInterval.areIntervalsDisjoint(Interval(testimony.a, testimony.b)) : 
+                if not visitInterval.are_intervals_disjoint(Interval(testimony.a, testimony.b)) : 
                     return not testimony.negative
         return testimony.negative
 

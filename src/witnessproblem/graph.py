@@ -1,41 +1,9 @@
 from .route import Route
+from .edge import Edge
 
 INFINITY = 1000000000
 NO_VERTEX = -1
-NO_DISTANCE = -1
 LINE_BREAK = '\n'
-
-
-class Edge :
-
-    
-    def __init__(self, v = NO_VERTEX, d = NO_DISTANCE) :
-        self.vertex = v
-        self.distance = d
-
-        
-    def __gt__(edge1, edge2) :
-        return edge1.distance > edge2.distance
-    
-    
-    def __str__(self):
-        return f"vertex: {self.vertex},\tdistance: {self.distance}"
-
-
-class Interval :
-
-
-    def __init__(self, ini: int, fin: int) :
-        self.a = ini
-        self.b = fin
-
-
-    def __lt__(self,other) :
-        return self.a < other.a
-    
-
-    def areIntervalsDisjoint(I1, I2):
-        return I1.b < I2.a or I2.b < I1.a
 
 
 class Graph :
@@ -88,7 +56,7 @@ class Graph :
         return self.bestDistanceMatrix[u][v]
 
         
-    # Returns the closest vertex to src, amond all the vertices in destinies
+    # Returns the closest vertex to src, among all the vertices in destinies
     def closestVertex(self, src, destinies: [int]) -> (int, int) :
         (distance, destiny) = (INFINITY, NO_VERTEX)
         for v in destinies: 
@@ -98,6 +66,7 @@ class Graph :
         return (destiny, distance)
 
 
+    # TODO: MOVE TO ANOTHER MODULE AND ADD UNIT TESTS
     # Builds a shortest distance route from src to dest, that waits the needed time in the last vertex until it lasts t.
     # Uses Floyd's algorithm path reconstruction
     def buildShortestRoute(self, src, dest, time, route: Route) :

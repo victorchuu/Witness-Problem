@@ -1,3 +1,5 @@
+from .edge import *
+from .interval import *
 from .graph import *
 from .instance import *
 from .route import *
