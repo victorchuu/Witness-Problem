@@ -36,7 +36,7 @@ class GeneticAlgorithm(Algorithm):
         
 
         def fit(self, individual):    
-                return self.fitness(self.instance, individual)
+            return self.fitness(self.instance, individual)
         
 
         def cross(self, p1, p2):         
