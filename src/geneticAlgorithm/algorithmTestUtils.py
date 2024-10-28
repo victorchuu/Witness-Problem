@@ -78,7 +78,7 @@ def executeAlgorithmsGraph(algorithms: List[GeneticAlgorithm], filename, legend)
             plt.legend()
 
 
-def executeAlgorithmsRealCaseToCSV(algorithms, filename, end_vertices, suffix='', startIn=0):
+def executeAlgorithmsRealCaseToCSV(algorithms, filename, end_vertices, suffix='', startIn=0, endIn=-1):
     output_file = 'solutions/' + filename + suffix + '.csv'
 
     with open('instances/' + filename + '.txt') as inFile, \
@@ -98,6 +98,8 @@ def executeAlgorithmsRealCaseToCSV(algorithms, filename, end_vertices, suffix=''
             actor_route.readFromFile(correctRouteFile)
             if i < startIn:
                 continue
+            if i == endIn:
+                break
 
             meanSolutions = list()
             maxSolutions = list()

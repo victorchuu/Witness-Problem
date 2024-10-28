@@ -175,6 +175,5 @@ class TestGeneticAlgorithm(unittest.TestCase):
         self.assertEqual(new_population, MUTATED_POPULATION)
 
 
-
 if __name__ == '__main__':
     unittest.main()
