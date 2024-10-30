@@ -1,12 +1,17 @@
 import unittest
 from unittest.mock import Mock, patch
 
+from src.geneticAlgorithm.algorithmDataGatherer import CSVDataGatherer, RealisticInstanceDataGatherer
 from src.witnessproblem import Route
 from src.geneticAlgorithm import GeneticAlgorithm
-from src.geneticAlgorithm.algorithmTestUtils import executeAlgorithmsToCSV, executeAlgorithmsRealCaseToCSV
+from src.geneticAlgorithm.algorithmTestUtils import transposeCSV, executeAlgorithms
 
 
 class TestGeneticAlgorithm(unittest.TestCase):
+
+
+    def test_transpose(self):
+        transposeCSV('solutions/I1-unittest.csv')
 
 
     @patch('time.time')
@@ -26,7 +31,7 @@ class TestGeneticAlgorithm(unittest.TestCase):
         time.side_effect = [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2]
 
         # Act
-        executeAlgorithmsToCSV(algorithms, 'I1', suffix='-unittest',  startIn=2, endIn=4)
+        executeAlgorithms(algorithms, 'I1', CSVDataGatherer, suffix='-unittest',  startIn=2, endIn=4)
 
         # Assert
         with open('solutions/I1-unittest.csv', 'r') as csv_file:
@@ -61,9 +66,11 @@ class TestGeneticAlgorithm(unittest.TestCase):
         algorithms = [(algorithm1, REPETITIONS), (algorithm2, REPETITIONS)]
 
         time.side_effect = [0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2]
+        end_vertices = [0]
+        dataGatherer = lambda a,b,c: RealisticInstanceDataGatherer(a,b,c,end_vertices)
 
         # Act
-        executeAlgorithmsRealCaseToCSV(algorithms, 'realCase', [0], suffix='-unittest',  startIn=2, endIn=4)
+        executeAlgorithms(algorithms, 'realCase', dataGatherer, suffix='-unittest',  startIn=2, endIn=4)
 
         # Assert
         with open('solutions/realCase-unittest.csv', 'r') as csv_file:
