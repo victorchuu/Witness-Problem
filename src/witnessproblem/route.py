@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
+from dataclasses_json import dataclass_json
 
 
+@dataclass_json
 @dataclass
 class Route:
     vertex: list[int] = field(default_factory=list)
@@ -37,9 +39,6 @@ class Route:
         self.vertex = [int(x) for x in file.readline().split()]
         self.time = [int(x) for x in file.readline().split()]
         self.leaveTime = [int(x) for x in file.readline().split()]
-
-
-
 
 
 

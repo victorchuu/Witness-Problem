@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import csv
 import time
 
+from src.realisticCase import RealisticCaseSolutionData
 from src.witnessproblem import fitness, Route
 
 
@@ -92,7 +93,8 @@ class RealisticInstanceDataGatherer(AlgorithmDataGatherer):
         self.writer = csv.writer(self.outFile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         self.writer.writerow([self.instance_name] + [str(alg[0]) for alg in self.algorithms])
         
-        self.correctRouteFile = open('solutions/' + self.instance_name + '.txt')
+        with open('solutions/' + self.instance_name + '.txt') as file:
+            self.correctRoutes = iter(RealisticCaseSolutionData.schema().loads(file.readline(), many=True))
         return self
 
     
@@ -102,9 +104,8 @@ class RealisticInstanceDataGatherer(AlgorithmDataGatherer):
         self.meanEndVertexHits = list()
         self.elapsedTime = list()
 
-        self.instance_parameters = [float(x) for x in self.correctRouteFile.readline().split()]
-        actor_route = Route()
-        actor_route.readFromFile(self.correctRouteFile)
+        self.solution = next(self.correctRoutes)
+        actor_route = self.solution.actor_route
 
         self.correct_end_vertex = actor_route.vertex[-1]
         self.original_fitness = fitness(instance, actor_route)
@@ -131,12 +132,11 @@ class RealisticInstanceDataGatherer(AlgorithmDataGatherer):
         self.elapsedTime.append((time.time() - startTime)/repetitions)
 
     def write_data(self, index):
-        self.writer.writerow([f"Mean ({self.instance_parameters[0]}; {int(self.instance_parameters[1])})"] + self.meanSolutions)
-        self.writer.writerow([f"Max ({self.instance_parameters[0]}; {int(self.instance_parameters[1])})"] + self.maxSolutions)
-        self.writer.writerow([f"Mean hits ({self.instance_parameters[0]}; {int(self.instance_parameters[1])})"] + self.meanEndVertexHits)
-        self.writer.writerow([f"real fitness ({self.instance_parameters[0]}; {int(self.instance_parameters[1])})"] + [self.original_fitness for _ in self.maxSolutions])
-        self.writer.writerow([f"Time ({self.instance_parameters[0]}; {int(self.instance_parameters[1])})"] + self.elapsedTime)
+        self.writer.writerow([f"Mean ({self.solution.base_similarity}; {int(self.solution.lying_witnesses)})"] + self.meanSolutions)
+        self.writer.writerow([f"Max ({self.solution.base_similarity}; {int(self.solution.lying_witnesses)})"] + self.maxSolutions)
+        self.writer.writerow([f"Mean hits ({self.solution.base_similarity}; {int(self.solution.lying_witnesses)})"] + self.meanEndVertexHits)
+        self.writer.writerow([f"real fitness ({self.solution.base_similarity}; {int(self.solution.lying_witnesses)})"] + [self.original_fitness for _ in self.maxSolutions])
+        self.writer.writerow([f"Time ({self.solution.base_similarity}; {int(self.solution.lying_witnesses)})"] + self.elapsedTime)
         
     def __exit__(self, x,y,z):
         self.outFile.close()
-        self.correctRouteFile.close()

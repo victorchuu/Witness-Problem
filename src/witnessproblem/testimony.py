@@ -1,5 +1,5 @@
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from dataclasses_json import dataclass_json
 
 from src.witnessproblem import Route, RouteIterator
@@ -11,7 +11,7 @@ class Testimony :
     possibleVertices: list[int]
     a: int
     b: int
-    negative: bool
+    negative: bool = field(default=False)
 
         
     def __post_init__(self) :

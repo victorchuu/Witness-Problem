@@ -1,5 +1,4 @@
 import random
-import json
 
 from src.witnessproblem import Edge, Instance, Testimony, Graph
 

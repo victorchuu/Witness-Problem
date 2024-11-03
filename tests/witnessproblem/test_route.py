@@ -43,6 +43,29 @@ class TestRoute(unittest.TestCase):
         self.assertEqual(route.leaveTime, [10])
         self.assertEqual(len(route), 1)
 
+    
+    def test_serialize_route_to_json(self):
+        # Arrange
+        route = createStaticRoute(1, 10)
+
+        # Act
+        json = route.to_json()
+
+        # Assert
+        self.assertEqual(json, '{"vertex": [1], "time": [10], "leaveTime": [10]}')
+
+
+    def test_deserialize_route_from_json(self):
+        # Arrange
+        json = '{"vertex": [1], "time": [10], "leaveTime": [10]}'
+
+        # Act
+        route = Route.from_json(json)
+
+        # Assert
+        self.assertEqual(route.vertex, [1])
+        self.assertEqual(route.time, [10])
+        self.assertEqual(route.leaveTime, [10])
 
 if __name__ == '__main__':
     unittest.main()
