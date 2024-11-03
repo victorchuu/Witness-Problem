@@ -1,5 +1,6 @@
 import unittest
 
+
 from src.witnessproblem import Instance
 from src.witnessproblem import Graph
 from src.witnessproblem import Testimony

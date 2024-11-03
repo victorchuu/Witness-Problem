@@ -1,6 +1,6 @@
 import unittest
 
-from src.witnessproblem import Graph, Interval
+from src.witnessproblem import Graph, Edge
 
 class TestGraph(unittest.TestCase):
 
@@ -12,7 +12,7 @@ class TestGraph(unittest.TestCase):
         # Assert
         self.assertEqual(graph.V, 0)
         self.assertEqual(graph.E, 0)
-        self.assertEqual(graph.adjList, [[int]])
+        self.assertEqual(graph.adjList, [[Edge]])
         self.assertEqual(graph.realDist, [[int]])
         self.assertEqual(graph.bestDistanceMatrix, [[int]])
         self.assertEqual(graph.floydPath, [[int]])
@@ -29,6 +29,8 @@ class TestGraph(unittest.TestCase):
 
         # Assert all distances are 1
         self.assertTrue(all([edge.distance == 1 for edges in graph.adjList for edge in edges]))
+
+        print(graph.to_json())
 
 
     def test_floyd_algorithm_in_grid_graph(self):

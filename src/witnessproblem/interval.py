@@ -1,10 +1,12 @@
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
 
+@dataclass_json
+@dataclass
 class Interval:
-
-    def __init__(self, ini: int, fin: int):
-        self.a = ini
-        self.b = fin
+    a: int
+    b: int
 
     def __lt__(self, other):
         return self.a < other.a

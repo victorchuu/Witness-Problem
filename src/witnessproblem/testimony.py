@@ -1,14 +1,28 @@
-from src.witnessproblem import Route, RouteIterator
 import random
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+
+from src.witnessproblem import Route, RouteIterator
 
 
+@dataclass_json
+@dataclass
 class Testimony :
-    
-    def __init__(self, vertices: [int] = [], a = 0, b = 0, negative = False) :
-        self.possibleVertices: [int] = vertices
-        self.a: int = a
-        self.b: int = b
-        self.negative: bool = negative
+    possibleVertices: list[int]
+    a: int
+    b: int
+    negative: bool
+
+        
+    def __post_init__(self) :
+        if self.possibleVertices is None:
+            self.possibleVertices = []
+        if self.a is None:
+            self.a = 0
+        if self.b is None:
+            self.b = 0
+        if self.negative is None:
+            self.negative = False
 
 
     # TODO: Use standard formatting such as JSON

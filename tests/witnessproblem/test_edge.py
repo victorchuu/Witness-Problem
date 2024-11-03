@@ -28,9 +28,16 @@ class TestEdge(unittest.TestCase):
         # Act & Assert
         self.assertTrue(edge2 > edge1)
 
-    def test_edge_str(self):
+    def test_serialising(self):
         # Arrange
         edge = Edge(1, 10)
 
-        # Act & Assert
-        self.assertEqual(str(edge), "vertex: 1,\tdistance: 10")
+        # Act& Assert
+        self.assertEqual(edge.to_json(), '{"vertex": 1, "distance": 10}')
+
+    def test_deserialising(self):
+        # Act
+        edge = Edge.from_json('{"vertex": 1, "distance": 10}')
+
+        # Act& Assert
+        self.assertEqual(edge, Edge(1, 10))

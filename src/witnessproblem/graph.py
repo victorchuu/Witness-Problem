@@ -1,17 +1,24 @@
 from .route import Route
 from .edge import Edge
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
+
 
 INFINITY = 1000000000
 NO_VERTEX = -1
 LINE_BREAK = '\n'
 
-
+@dataclass_json
+@dataclass
 class Graph :
+    V: int
+    E: int
+    adjList: list[list[Edge]]
     
-    def __init__(self) :
-        self.V: int = 0
-        self.E: int = 0
-        self.adjList = [[int]]
+    def __init__(self, V = 0, E = 0, adjList = [[Edge]]):
+        self.V = V
+        self.E = E
+        self.adjList = adjList
         self.realDist = [[int]]
 
         # Shortest distance (and its path) between any pair of vertices, calulated with Floyd's algorithm

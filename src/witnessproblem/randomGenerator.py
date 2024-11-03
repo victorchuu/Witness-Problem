@@ -1,5 +1,7 @@
 import random
-from src.witnessproblem import Edge, Instance, Testimony
+import json
+
+from src.witnessproblem import Edge, Instance, Testimony, Graph
 
 
 class RandomInstanceGenerator:
@@ -36,22 +38,21 @@ class RandomInstanceGenerator:
 
     
     def create(self, fileName, numCases):
-        string = str(numCases) + '\n'
+        instances = []
         for _ in range(numCases) :
-            instance = Instance()
-            self.randomInstance(instance)
-            string += instance.writeToFile()
+            instances.append(self.randomInstance())
 
         with open('instances/' + fileName,'w') as f:
-            f.write(string)
+            f.write(Instance.schema().dumps(instances, many=True))
+
+    def randomInstance(self):
+        graph: Graph = self.random_graph()
+        testimoniesByWitness = self.random_witnesses(graph)
+        return Instance(graph, testimoniesByWitness)
 
 
-    def randomInstance(self, instance: Instance):
-        self.random_graph(instance.graph)
-        self.random_witnesses(instance)
-
-
-    def random_graph(self, graph):
+    def random_graph(self):
+        graph = Graph()
         graph.V = self.vertices
         graph.adjList = [[] for _ in range(self.vertices)]
         graph.E = self.directed_edges
@@ -73,29 +74,30 @@ class RandomInstanceGenerator:
             if(self.undirected_graph) :
                 i += 1
                 graph.adjList[v].append(Edge(u,distance))
+        return graph
 
     
-    def random_witnesses(self, instance) :
-        actual_vertices_per_testimony = min(instance.graph.V, self.max_vertices_per_testimony)
-        instance.testimoniesByWitness = [[] for _ in range(self.witnesses)]
+    def random_witnesses(self, graph) :
+        actual_vertices_per_testimony = min(graph.V, self.max_vertices_per_testimony)
+        testimoniesByWitness = [[] for _ in range(self.witnesses)]
 
         for witness in range(self.witnesses) :
             num_testimonies = random.randint(1 , self.max_testimonies_per_witness)
 
-            instance.testimoniesByWitness[witness] = []
+            testimoniesByWitness[witness] = []
 
             for i in range(num_testimonies) :
                 interval_length = random.randint(0, self.max_interval_length)
                 a = random.randint(0, self.max_time_window - interval_length)
                 b = a + interval_length
-                instance.testimoniesByWitness[witness].append(self.randomTestimony(instance.graph.V, a, b,actual_vertices_per_testimony))
-                instance.maxTime = max(instance.maxTime, b)
+                testimoniesByWitness[witness].append(self.randomTestimony(graph.V, a, b,actual_vertices_per_testimony))
+        return testimoniesByWitness
         
 
     def randomTestimony(self, totalVertices, a, b, vertices_per_testimony) :
         num_vertices = random.randint(1 , vertices_per_testimony)
         return Testimony(
-            vertices=random.sample(list(range(totalVertices)), num_vertices),
+            possibleVertices=random.sample(list(range(totalVertices)), num_vertices),
             a = a,
             b = b,
             negative = random.uniform(0, 1) < self.negative_testimonies_rate
