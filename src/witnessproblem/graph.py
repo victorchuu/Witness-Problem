@@ -19,15 +19,9 @@ class Graph :
         self.V = V
         self.E = E
         self.adjList = adjList
-        self.realDist = [[int]]
 
-        # Shortest distance (and its path) between any pair of vertices, calulated with Floyd's algorithm
-        self.bestDistanceMatrix = [[int]] 
-        self.floydPath = [[int]]
-                
 
     def applyFloyd(self) :
-
         # Initial status for Floyd's algorithm
         self.bestDistanceMatrix = [ [INFINITY for _ in range(self.V)] for _ in range(self.V) ]
         self.realDist = [ [INFINITY for _ in range(self.V)] for _ in range(self.V) ]

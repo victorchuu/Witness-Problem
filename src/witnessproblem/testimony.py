@@ -24,6 +24,13 @@ class Testimony :
         if self.negative is None:
             self.negative = False
 
+    def __hash__(self):
+        return hash((tuple(self.possibleVertices), self.a, self.b, self.negative))
+
+    def __eq__(self, other):
+            if isinstance(other, Testimony):
+                return (self.possibleVertices, self.a, self.b, self.negative) == (other.possibleVertices, other.a, other.b, other.negative)
+            return False
 
     # TODO: Use standard formatting such as JSON
     def readFromFile(self, file) :

@@ -34,24 +34,23 @@ def executeAlgorithmsGraph(algorithms: List[GeneticAlgorithm], filename, legend)
             plt.legend()
 
 
-def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=0, endIn=-1, ):
+def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=0, endIn=-1):
     output_file = 'solutions/' + filename + suffix + '.csv'
 
     with open('instances/' + filename + '.txt') as inFile, getDataGatherer(output_file, filename, algorithms) as dataGatherer:
 
         print(f"Starting Execution at {datetime.datetime.now().strftime('%H:%M')}")
 
-        num_instances = int(inFile.readline())
-        for i in range(num_instances):
-            instance = Instance()
-            instance.readFromFile(inFile)
+        instances: list[Instance] = Instance.schema().loads(inFile.readline(), many=True)
+
+        for i, instance in enumerate(instances):
             dataGatherer.start(instance)
+            instance.graph.applyFloyd()
 
             if i < startIn:
                 continue
             if i == endIn:
                 break
-
 
             override_initial_pop = initial_population_with_greedy(instance, 150)
             print("Calculated the initial population")
