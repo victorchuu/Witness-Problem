@@ -18,11 +18,11 @@ class TestInstance(unittest.TestCase):
         instance = Instance(self.graph, self.testimoniesByWitness)
 
         # Assert
-        self.assertIsInstance(self.instance.graph, Graph)
-        self.assertEqual(self.instance.testimoniesByWitness, [])
-        self.assertEqual(self.instance.maxTime, 0)
-        self.assertIsInstance(self.instance.precompute, FitnessPrecomputation)
-        self.assertEqual(self.instance.precompute.collidingTestimoniesSet.cache_info().hits, 0)
+        self.assertIsInstance(instance.graph, Graph)
+        self.assertEqual(instance.testimoniesByWitness, [])
+        self.assertEqual(instance.maxTime, 0)
+        self.assertIsInstance(instance.precompute, FitnessPrecomputation)
+        self.assertEqual(instance.precompute.collidingTestimoniesSet.cache_info().hits, 0)
 
 
 

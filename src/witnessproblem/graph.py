@@ -80,41 +80,7 @@ class Graph :
         if time != 0 :
             route.time[-1] += time - self.bestDistanceMatrix[src][dest]
             route.leaveTime[-1] += time - self.bestDistanceMatrix[src][dest]
-    
 
-    def readFromFile(self, file) :
-        
-        line = file.readline().split()
-        self.V, self.E = int(line[0]), int(line[1])
-
-        self.adjList = [[] for _ in range(self.V)]
-
-        for _ in range(self.E):
-            line = file.readline().split()
-            (source, destiny, distance) = map(int, line)
-
-            if source >= self.V or destiny >= self.V or distance <= 0:
-                raise Exception(f"wrong graph, edge: {source} --> {destiny,} ({distance})")
-            self.adjList[source].append(Edge(destiny, distance))
-
-        self.applyFloyd()
-
-
-    def writeToFile(self) :
-        string = f"{self.V} {self.E}"
-        if self.E :
-            string += LINE_BREAK
-
-        return string + LINE_BREAK.join([f"{source} {edge.vertex} {edge.distance}" for source, edgesList in enumerate(self.adjList) for edge in edgesList]) + LINE_BREAK
-
-
-    # Prints the matrix in a more human-readable way
-    def __str__(self) : 
-        string = f"Vertices: {self.V}, Edges: {self.E}\n"
-        for source in range(len(self.adjList)) :
-            for edge in self.adjList[source] :
-                string += f"{source} --> {edge.vertex} ({edge.vertex})\n"
-        return string
     
     def createGridGraph(self, n: int, distance: int):
         self.V = n*n

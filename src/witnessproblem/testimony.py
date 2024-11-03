@@ -32,23 +32,6 @@ class Testimony :
                 return (self.possibleVertices, self.a, self.b, self.negative) == (other.possibleVertices, other.a, other.b, other.negative)
             return False
 
-    # TODO: Use standard formatting such as JSON
-    def readFromFile(self, file) :
-        self.negative = 'N' in file.readline()
-        self.possibleVertices = [int(x) for x in file.readline().split()]
-        line = file.readline().split()
-        self.a, self.b = int(line[0]), int(line[1])
-        return self
-
-    # TODO: Use standard formatting such as JSON
-    def writeToFile(self) :
-        return f"{'N' if self.negative else 'Y'}\n{' '.join(map(str,self.possibleVertices))}\n{self.a} {self.b}"
-
-    # Print in a human-readable way    
-    def __str__(self) :
-        return f"I {'did not see' if self.negative else 'saw' } the actor in one the vertices {self.possibleVertices}, \t during time interval: [{self.a}, {self.b}]"
-
-
     def __lt__(self, other) :
         return self.a < other.a
 

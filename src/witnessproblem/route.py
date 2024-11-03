@@ -21,25 +21,8 @@ class Route:
         self.leaveTime[-1] += time
         
         
-    # TODO: Use standard formatting such as JSON
-    def __str__(self):
-        return f'Route: {self.vertex}\nTiempos: {self.time}\nLeaveTime: {self.leaveTime}'
-    
     def __len__(self):
         return len(self.vertex)
-    
-    # TODO: Use standard formatting such as JSON
-    def writeToFile(self) :
-        return ' '.join(map(str, self.vertex)) + '\n' + \
-               ' '.join(map(str, self.time)) + '\n' + \
-               ' '.join(map(str, self.leaveTime)) + '\n'
-    
-    # TODO: Use standard formatting such as JSON
-    def readFromFile(self, file):
-        self.vertex = [int(x) for x in file.readline().split()]
-        self.time = [int(x) for x in file.readline().split()]
-        self.leaveTime = [int(x) for x in file.readline().split()]
-
 
 
 def createStaticRoute(vertex: int, time: int):
