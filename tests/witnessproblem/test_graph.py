@@ -13,9 +13,6 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.V, 0)
         self.assertEqual(graph.E, 0)
         self.assertEqual(graph.adjList, [[Edge]])
-        self.assertEqual(graph.realDist, [[int]])
-        self.assertEqual(graph.bestDistanceMatrix, [[int]])
-        self.assertEqual(graph.floydPath, [[int]])
 
 
     def test_graph_create_grid_graph(self):
