@@ -1,4 +1,6 @@
 import random
+import time
+
 from src.Algorithm import Algorithm
 from src.geneticOperators import initial_population, crossover, mutate, localSearch
 from src.witnessproblem import fitness
@@ -16,13 +18,15 @@ class GeneticAlgorithm(Algorithm):
                      tournamentParticipants = 4,
                      crossoverRate = 0.7, 
                      mutationProbability = 0.6, 
-                     localSearchProb = lambda it, max: (it/max) * 0.2
+                     localSearchProb = lambda it, max: (it/max) * 0.2,
+                     stop_condition = lambda i,_: i > 100
                      ):
             self.crossover = crossover
             self.mutation = mutation
             self.fitness = fit
             self.initialPopulation = initialPopulation
             self.localSearch = localSearch
+            self.stop_condition = stop_condition
 
             self.numGenerations = numGenerations
             self.populationSize = populationSize
@@ -60,10 +64,14 @@ class GeneticAlgorithm(Algorithm):
                 population = override_initial_pop
             bestSolutions = [0]
             best_individual_overall = None
-            for i in range(self.numGenerations):    
+
+            i = 0
+            start_time = time.time()
+            while not self.stop_condition(i, start_time):    
                 population, best_individual_iteration = self.iteration(population, bestSolutions, i)
                 if bestSolutions[-1] > bestSolutions[-2]:
                     best_individual_overall = best_individual_iteration
+                i += 1
             return max(bestSolutions), best_individual_overall
 
 
