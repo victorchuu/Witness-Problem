@@ -37,7 +37,7 @@ def mutate_interval(instance, route, i, j):
         it = RouteIterator(route, None)
         depart_from = 0
         
-    # Advance without copyng route[i] --> route [j]
+    # Advance without copying route[i] --> route [j]
     if j == NO_VERTEX_SELECTED :
         destiny = NO_VERTEX_SELECTED
         arrive_at = instance.maxTime
@@ -47,7 +47,7 @@ def mutate_interval(instance, route, i, j):
         arrive_at = it.a
 
     # Append a new random route R[i...k]
-    appendRandomRoute(instance.graph, destiny, arrive_at - depart_from, R)
+    R = appendRandomRoute(instance.graph, destiny, arrive_at - depart_from, R)
     
     # Copy the route: R[k...] = route[j...]
     if j != NO_VERTEX_SELECTED and j < len(route.vertex) :

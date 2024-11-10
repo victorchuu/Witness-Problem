@@ -28,6 +28,7 @@ def appendRandomRoute(graph: Graph, dest, time, route: Route) :
         dest = random.choice(possibleDestinies)
     
     randomRouteRecursive(graph, src, dest, time, route)
+    return route
 
 
 def randomRouteRecursive(graph, src, dest, time, route: Route) :  
