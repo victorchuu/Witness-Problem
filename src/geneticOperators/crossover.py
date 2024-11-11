@@ -9,7 +9,6 @@ def crossover(instance, p1, p2) :
     return succesor(instance, p1, p2) , succesor(instance, p2, p1)
 
 
-
 def succesor(instance: Instance, p1: Route, p2: Route) :
     graph = instance.graph
     son = Route()
@@ -27,7 +26,7 @@ def succesor(instance: Instance, p1: Route, p2: Route) :
     # Select the first index in p2 reachable departing from p1[index]
     leave_time = it.b
     src = it.vertex
-    unreachable_from_src = lambda x: leave_time+ graph.bestDist(src, p2.vertex[x]) > p2.leaveTime[x]
+    unreachable_from_src = lambda x: leave_time + graph.bestDist(src, p2.vertex[x]) > p2.leaveTime[x]
     j = firstFalseIndexBinarySerch(0, len(p2), unreachable_from_src)
 
     graph.buildShortestRoute(src, p2.vertex[j] , p2.leaveTime[j] - leave_time , son) 
