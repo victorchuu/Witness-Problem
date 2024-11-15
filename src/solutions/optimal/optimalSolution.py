@@ -1,5 +1,6 @@
 from src.witnessproblem import Instance, Route, fitness
 from src.Algorithm import Algorithm
+from collections import deque
 
 
 MAX_VERTICES_IN_GRAPH = 20
@@ -7,31 +8,39 @@ MAX_INSTANCE_TIME = 20
 
 
 # The search algorithm itearates ALL the possible routes, and picks the one with best fitness
-# It starts with a route consisting of just the initial vertex, and recursively constructs all the possible routes
+# It starts with the routes consisting of just an initial vertex, and constructs all the possible routes
 # It's pretty basic, doesn't do any Branch and bound. There is a lot of room for improvement here
-def recursiveSearch(route: Route, instance: Instance, time, currentVertex) :
+def iterativeSearch(instance: Instance):
 
-    if time <= 0 :
-        return fitness(instance, route)
-    
-    bestSolution = fitness(instance, route)
+    queue = deque()
+    maximum = 0
 
-    # For each adjacent vertex, we try to move the route there
-    for edge in instance.graph.adjList[currentVertex] :
-        new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])  # Copy the route
-        new_route.vertex.append(edge.vertex)
-        new_route.time.append(0)
-        new_route.leaveTime.append(edge.distance + new_route.leaveTime[-1])
+    for vertex in range(instance.graph.V):
+        initial_route = Route()
+        initial_route.startAt(vertex)
+        queue.append(initial_route)
 
-        bestSolution = max(bestSolution, recursiveSearch(new_route, instance, time - edge.distance, edge.vertex))
+    while queue:
+        route = queue.popleft()
+        if route.leaveTime[-1] >= instance.maxTime:
+            maximum = max(maximum, fitness(instance, route))
 
-    # We also try to stay in the current vertex 1 unit of time
-    new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])  # Copy the route
-    new_route.time[-1] += 1
-    new_route.leaveTime[-1] += 1
-    bestSolution = max(bestSolution, recursiveSearch(new_route, instance, time - 1, currentVertex) )
+        if route.leaveTime[-1] < instance.maxTime:
+            current_vertex = route.vertex[-1]
 
-    return bestSolution
+            for edge in instance.graph.adjList[current_vertex]:
+                new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])
+                new_route.vertex.append(edge.vertex)
+                new_route.time.append(0)
+                new_route.leaveTime.append(edge.distance + new_route.leaveTime[-1])
+                queue.append(new_route)
+
+            new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])
+            new_route.time[-1] += 1
+            new_route.leaveTime[-1] += 1
+            queue.append(new_route)
+
+    return maximum
 
 
 def unsafeToRunSearchAlgorithm(instance: Instance):
@@ -50,13 +59,7 @@ def optimalSolution(instance: Instance) :
     if unsafeToRunSearchAlgorithm(instance):
         return -1
 
-    maximum = 0
-    for vertex in range(instance.graph.V) :
-        route = Route()
-        route.startAt(vertex)
-        maximum = max([maximum, recursiveSearch(route, instance, instance.maxTime, vertex)])
-
-    return maximum
+    return iterativeSearch(instance)
 
 
 class SearchAlgorithm(Algorithm):
