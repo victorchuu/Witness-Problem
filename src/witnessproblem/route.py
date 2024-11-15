@@ -23,6 +23,10 @@ class Route:
         
     def __len__(self):
         return len(self.vertex)
+    
+
+    def __gt__(self, other):
+        return True 
 
 
 def createStaticRoute(vertex: int, time: int):

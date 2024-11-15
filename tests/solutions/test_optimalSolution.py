@@ -30,6 +30,7 @@ class TestOptimalSolution(unittest.TestCase):
         # Arrange
         with open('instances/tiny.txt') as inFile:
             instances: list[Instance] = Instance.schema().loads(inFile.readline(), many=True)
+            [instance.graph.applyFloyd() for instance in instances]
 
         # Act
         results = [optimalSolution(instance) for instance in instances]
