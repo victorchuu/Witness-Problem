@@ -18,22 +18,18 @@ def recursiveSearch(route: Route, instance: Instance, time, currentVertex) :
 
     # For each adjacent vertex, we try to move the route there
     for edge in instance.graph.adjList[currentVertex] :
-        route.vertex.append(edge.vertex)
-        route.time.append(0)
-        route.leaveTime.append(edge.distance + route.leaveTime[-1])
+        new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])  # Copy the route
+        new_route.vertex.append(edge.vertex)
+        new_route.time.append(0)
+        new_route.leaveTime.append(edge.distance + new_route.leaveTime[-1])
 
-        bestSolution = max(bestSolution, recursiveSearch(route, instance, time - edge.distance, edge.vertex))
+        bestSolution = max(bestSolution, recursiveSearch(new_route, instance, time - edge.distance, edge.vertex))
 
-        del route.vertex[-1]
-        del route.time[-1]
-        del route.leaveTime[-1]
-
-    # We also try to stay in the curent vertex 1 unit of time
-    route.time[-1] += 1
-    route.leaveTime[-1] += 1
-    bestSolution = max(bestSolution, recursiveSearch(route, instance, time - 1, currentVertex) )
-    route.time[-1] -= 1
-    route.leaveTime[-1] -= 1
+    # We also try to stay in the current vertex 1 unit of time
+    new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])  # Copy the route
+    new_route.time[-1] += 1
+    new_route.leaveTime[-1] += 1
+    bestSolution = max(bestSolution, recursiveSearch(new_route, instance, time - 1, currentVertex) )
 
     return bestSolution
 
