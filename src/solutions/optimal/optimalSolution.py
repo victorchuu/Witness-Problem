@@ -1,3 +1,4 @@
+from src.solutions.greedy import GreedyDistance, PersistentGreedyAlgorithm
 from src.witnessproblem import Instance, Route, fitness
 from src.Algorithm import Algorithm
 import heapq
@@ -28,22 +29,30 @@ def calculateUpperBound(instance: Instance, route: Route):
     return fitness(instance, route) + numberOfReachablePositiveTestimonies(instance, route.vertex[-1], route.leaveTime[-1])
 
 
-# The search algorithm itearates ALL the possible routes, and picks the one with best fitness
+def push_solution_if_worth_it(instance: Instance, route: Route, maximum: int, queue: list):
+    upper_bound = calculateUpperBound(instance, route)
+    if upper_bound > maximum:
+        heapq.heappush(queue, (-upper_bound * (route.leaveTime[-1] + 1), route))
+    else:
+        print(f"Skipping solution with time {route.leaveTime[-1]}")
+
+# The search algorithm iterates ALL the possible routes, and picks the one with best fitness
 # It starts with the routes consisting of just an initial vertex, and constructs all the possible routes
-def iterativeSearch(instance: Instance):
+def optimalSolution(instance: Instance):
 
     queue = []
-    maximum = 0
+    maximum,best_route = PersistentGreedyAlgorithm(GreedyDistance()).run(instance)
 
     for vertex in range(instance.graph.V):
         initial_route = Route()
         initial_route.startAt(vertex)
-        heapq.heappush(queue, (FIXED_PRIORITY, initial_route))
+        push_solution_if_worth_it(instance, initial_route, maximum, queue)
 
     while queue:
         priority, route = heapq.heappop(queue)
         if route.leaveTime[-1] >= instance.maxTime:
             maximum = max(maximum, fitness(instance, route))
+            best_route = route
 
         else:
             upper_bound = calculateUpperBound(instance, route)
@@ -56,14 +65,14 @@ def iterativeSearch(instance: Instance):
                 new_route.vertex.append(edge.vertex)
                 new_route.time.append(0)
                 new_route.leaveTime.append(edge.distance + new_route.leaveTime[-1])
-                heapq.heappush(queue, (FIXED_PRIORITY, new_route))
+                push_solution_if_worth_it(instance, new_route, maximum, queue)
 
             new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])
             new_route.time[-1] += 1
             new_route.leaveTime[-1] += 1
-            heapq.heappush(queue, (FIXED_PRIORITY, new_route))
+            push_solution_if_worth_it(instance, new_route, maximum, queue)
 
-    return maximum
+    return maximum, best_route
 
 
 def unsafeToRunSearchAlgorithm(instance: Instance):
@@ -76,13 +85,6 @@ def unsafeToRunSearchAlgorithm(instance: Instance):
         print(warn_message, f"Time window is too big: {instance.maxTime}")
         return True
     return False
-    
-
-def optimalSolution(instance: Instance) :   
-    if unsafeToRunSearchAlgorithm(instance):
-        return -1
-
-    return iterativeSearch(instance)
 
 
 class SearchAlgorithm(Algorithm):
@@ -92,7 +94,10 @@ class SearchAlgorithm(Algorithm):
         super()
 
 
-    def run(self, instance):
+    def run(self, instance, override_initial_pop=None):
+        if unsafeToRunSearchAlgorithm(instance):
+            return -1
+
         return optimalSolution(instance)
 
 

@@ -39,26 +39,26 @@ def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=
 
     with open('instances/' + filename + '.txt') as inFile, getDataGatherer(output_file, filename, algorithms) as dataGatherer:
 
-        print(f"Starting Execution at {datetime.datetime.now().strftime('%H:%M')}")
+        print(f"Starting Execution at {datetime.datetime.now().strftime('%H:%M:%S')}")
 
         instances: list[Instance] = Instance.schema().loads(inFile.readline(), many=True)
 
         for i, instance in enumerate(instances):
-            dataGatherer.start(instance)
-            instance.graph.applyFloyd()
 
             if i < startIn:
                 continue
             if i == endIn:
                 break
 
+            dataGatherer.start(instance)
+            instance.graph.applyFloyd()
+
             override_initial_pop = initial_population_with_greedy(instance, 150)
-            print("Calculated the initial population")
             for alg, repetitions in algorithms:
                 dataGatherer.record_algorithm_data(alg, instance, override_initial_pop, repetitions)
                 
             dataGatherer.write_data(i)
-            print(f"Finished instance #{i} at {datetime.datetime.now().strftime('%H:%M')}")
+            print(f"Finished instance #{i} at {datetime.datetime.now().strftime('%H:%M:%S')}")
 
     transposeCSV(output_file)
     

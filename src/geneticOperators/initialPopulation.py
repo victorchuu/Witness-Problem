@@ -12,23 +12,17 @@ def initial_population(instance: Instance, size: int):
 
 
 def initial_population_with_greedy(instance: Instance, size: int):
-    times_distance = 10
-    times_testimonies = 10
+    times_distance = 20
 
     greedy_distance = GreedyDistance()
-    greedy_testimonies = GreedyTestimonies()
 
     population = [
         greedy_distance.run(instance) for _ in range(times_distance)
     ]
 
-    population.extend([
-        greedy_testimonies.run(instance) for _ in range(times_testimonies)
-    ])
-
     population = [make_route_wait_in_last_vertex(r, instance) for _, r in population]
 
-    population.extend(initial_population(instance, size - times_distance - times_testimonies))
+    population.extend(initial_population(instance, size - times_distance))
 
     return population
 
