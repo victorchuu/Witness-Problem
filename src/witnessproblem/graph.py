@@ -1,7 +1,9 @@
 from .route import Route
 from .edge import Edge
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
+from dataclasses import dataclass, field
+from dataclasses_json import dataclass_json, config
+from marshmallow import fields
+import rustworkx as rx
 
 
 INFINITY = 1000000000
@@ -10,7 +12,7 @@ LINE_BREAK = '\n'
 
 @dataclass_json
 @dataclass
-class Graph :
+class Graph:
     V: int
     E: int
     adjList: list[list[Edge]]
@@ -103,4 +105,33 @@ class Graph :
         self.applyFloyd()
 
 
-            
+def custom_graph_serializer(graph: Graph) -> str:
+
+    if not hasattr(graph, "digraph"):
+        graph.digraph = rx.PyDiGraph()
+        graph.digraph.add_nodes_from(range(graph.V))
+        for edges in graph.adjList:
+            for edge in edges:
+                graph.digraph.add_edge(edge.vertex, edges.index(edge), edge.distance)
+    return rx.node_link_json(graph.digraph, edge_attrs=lambda x: {"dist": str(x)})
+
+
+def custom_graph_deserializer(graph_str: str) -> Graph:
+    digraph = rx.parse_node_link_json(graph_str, edge_attrs=lambda x: int(x["dist"]))
+    V = len(digraph.nodes())
+    E = len(digraph.edge_list())
+    graph = Graph(V=V, E=E)
+    graph.digraph = digraph  
+    return graph
+
+
+# Create a custom Marshmallow field
+class CustomGraphField(fields.Field):
+
+    def _serialize(self, value, attr, obj, **kwargs):
+        # Use a custom encoder during serialization
+        return custom_graph_serializer(value)
+    """
+    def _deserialize(self, value, attr, data, **kwargs):
+        return custom_graph_deserializer(value)
+    """

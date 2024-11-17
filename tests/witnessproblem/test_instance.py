@@ -41,5 +41,35 @@ class TestInstance(unittest.TestCase):
         self.assertEqual(testimonies, [testimony1, testimony2, testimony3])
 
 
+    # Execute this only if NOT using custom_graph_deserializer
+    def test_transform_from_old_format_to_new(self):
+        filename = 'realCase'
+        # Arrange
+        with open(f'instances/{filename}.txt') as inFile:
+            serialized_instances = inFile.readline()
+        
+        # Act
+        instances: list[Instance] = Instance.schema().loads(serialized_instances, many=True)
+        re_serialized_instances = Instance.schema().dumps(instances, many=True)
+
+        # Assert
+        with open(f'instances/new-{filename}.txt', 'w') as outFile:
+            outFile.write(re_serialized_instances)
+
+
+    # Execute this only if using custom_graph_deserializer
+    def test_new_format_deserialize(self):
+        # Arrange
+        with open('instances/new-I5.txt') as inFile:
+            serialized_instances = inFile.readline()
+        
+        # Act
+        instances: list[Instance] = Instance.schema().loads(serialized_instances, many=True)
+        re_serialized_instances = Instance.schema().dumps(instances, many=True)
+
+        # Assert
+        self.assertEqual(serialized_instances, re_serialized_instances)
+
+
 if __name__ == '__main__':
     unittest.main()
