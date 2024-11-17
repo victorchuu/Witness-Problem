@@ -45,7 +45,7 @@ class RealisticCaseInstanceGenerator:
         return self.BASE_SIMILARITY / (2**(index))
 
 
-    def generateTestimonies(self, actor_route: Route, moving_individuals: [(Route, int)], vertex: int):
+    def generateTestimonies(self, actor_route: Route, moving_individuals: list[(Route, int)], vertex: int):
         # Generate correct testimonies
         testimonies = generateIntervalTestimonies(actor_route, vertex, 0, self.maxTime, probability=0.95)
 
@@ -55,9 +55,7 @@ class RealisticCaseInstanceGenerator:
             testimonies.extend(noise_testimonies)
 
         # Fill the blanks with negative testimonies
-        testimonies.extend(generateNegativeTestimonies(testimonies, vertex, 0, self.maxTime))
-
-        return testimonies
+        return testimonies + generateNegativeTestimonies(testimonies, vertex, 0, self.maxTime)
     
 
     def generateRandomTestimony(self, graph):
