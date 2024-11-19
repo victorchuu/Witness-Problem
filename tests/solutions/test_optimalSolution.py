@@ -10,7 +10,7 @@ class TestOptimalSolution(unittest.TestCase):
         instance = grid_graph_instance()
 
         # Act
-        result = optimalSolution(instance)
+        result, route = optimalSolution(instance)
 
         # Assert
         self.assertEqual(result, 5)
@@ -21,7 +21,7 @@ class TestOptimalSolution(unittest.TestCase):
         instance = grid_graph_instance_2()
 
         # Act
-        result = optimalSolution(instance)
+        result, route = optimalSolution(instance)
 
         # Assert
         self.assertEqual(result, 9)
@@ -33,7 +33,7 @@ class TestOptimalSolution(unittest.TestCase):
             [instance.graph.applyFloyd() for instance in instances]
 
         # Act
-        results = [optimalSolution(instance) for instance in instances]
+        results = [optimalSolution(instance)[0] for instance in instances]
 
         # Assert
         self.assertEqual(results, [10, 12, 15, 15, 13, 13, 9, 12, 13, 16])
