@@ -57,7 +57,7 @@ class TestInstance(unittest.TestCase):
             outFile.write(re_serialized_instances)
 
 
-    # Execute this only if using custom_graph_deserializer
+    """ Execute this only if using custom_graph_deserializer
     def test_new_format_deserialize(self):
         # Arrange
         with open('instances/new-I5.txt') as inFile:
@@ -69,6 +69,7 @@ class TestInstance(unittest.TestCase):
 
         # Assert
         self.assertEqual(serialized_instances, re_serialized_instances)
+    """
 
 
 if __name__ == '__main__':

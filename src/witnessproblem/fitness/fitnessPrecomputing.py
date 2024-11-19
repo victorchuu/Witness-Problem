@@ -1,7 +1,7 @@
 from src.utils.binarySearch import *
 from functools import lru_cache
 
-""" This class represents and chronologycally sort all the time events that appear in the testimonies 
+""" This class represents and chronologically sorts all the time events that appear in the testimonies 
 If there are 2 intervals
     - I1 = [2,7]
     - I2 = [4,8]
@@ -14,16 +14,19 @@ Then there will be 4 testimony events, sorted like
 class TestimonyEvent:
 
 
-    def __init__(self, eventTime, isOpen: bool, witnessIndex, testimonyIndex):
+    def __init__(self, eventTime, isOpen: bool, witnessIndex, testimonyIndex, openIntervalsSet=set()):
         self.eventTime: int = eventTime
         self.isOpen: bool = isOpen
 
         self.hashkey = (witnessIndex, testimonyIndex)
-        self.openIntervalsSet = set()
+        self.openIntervalsSet = openIntervalsSet
 
 
     def __lt__(self, other):
         return self.eventTime < other.eventTime or ( self.eventTime == other.eventTime and self.isOpen )
+
+    def __eq__(self, other):
+        return self.eventTime == other.eventTime and self.isOpen == other.isOpen and self.hashkey == other.hashkey and self.openIntervalsSet == other.openIntervalsSet
 
 
 """ This assigns to every testimony event, the set of intervals that are open right before that point in time
