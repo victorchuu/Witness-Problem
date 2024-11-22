@@ -110,9 +110,9 @@ def custom_graph_serializer(graph: Graph) -> str:
     if not hasattr(graph, "digraph"):
         graph.digraph = rx.PyDiGraph()
         graph.digraph.add_nodes_from(range(graph.V))
-        for edges in graph.adjList:
-            for edge in edges:
-                graph.digraph.add_edge(edge.vertex, edges.index(edge), edge.distance)
+        for vertex, adjacentEdges in enumerate(graph.adjList):
+            for edge in adjacentEdges:
+                graph.digraph.add_edge(vertex, edge.vertex, edge.distance)
     return rx.node_link_json(graph.digraph, edge_attrs=lambda x: {"dist": str(x)})
 
 
