@@ -10,49 +10,28 @@ INFINITY = 1000000000
 NO_VERTEX = -1
 LINE_BREAK = '\n'
 
-@dataclass_json
-@dataclass
 class Graph:
-    V: int
-    E: int
-    adjList: list[list[Edge]]
     
-    def __init__(self, V = 0, E = 0, adjList = [[Edge]]):
-        self.V = V
-        self.E = E
-        self.adjList = adjList
+    def __init__(self, digraph: rx.PyDiGraph = rx.PyDiGraph()):
+        self.digraph = digraph
+        self.V = len(digraph.nodes())
+        self.E = len(digraph.edge_list())
+
+    
+    def get_adjacents(self, vertex: int) -> list[Edge]:
+        return [Edge(vertex=edge[1], distance=edge[2]) for edge in self.digraph.out_edges(vertex)]
 
 
     def applyFloyd(self) :
-        # Initial status for Floyd's algorithm
-        self.bestDistanceMatrix = [ [INFINITY for _ in range(self.V)] for _ in range(self.V) ]
-        self.realDist = [ [INFINITY for _ in range(self.V)] for _ in range(self.V) ]
-        self.floydPath = [ [i for _ in range(self.V)] for i in range(self.V) ]
-        for vertex in range(self.V) :
-            for edge in self.adjList[vertex]:
-                self.realDist[vertex][edge.vertex] = edge.distance
-                self.bestDistanceMatrix[vertex][edge.vertex] = edge.distance
-            self.bestDistanceMatrix[vertex][vertex] = 0
-            self.realDist[vertex][vertex] = 0
-
-        
-        # Floyd's algorithm
-        for k in range(self.V) :
-            for i in range(self.V) :
-                for j in range(self.V) :
-                    if self.bestDistanceMatrix[i][k] + self.bestDistanceMatrix[k][j] < self.bestDistanceMatrix[i][j] :
-                        self.bestDistanceMatrix[i][j] = self.bestDistanceMatrix[i][k] + self.bestDistanceMatrix[k][j]
-                        self.floydPath[i][j] = self.floydPath[k][j]
-
+        floyd_distance_matrix, self.floydPath = rx.digraph_floyd_warshall_successor_and_distance(self.digraph, weight_fn = lambda x: x)
+        self.bestDistanceMatrix = [[INFINITY if x == float('inf') else int(x) for x in row] for row in floyd_distance_matrix]
 
 
     # Returns the distance between two vertices taking the edge that connects them directly
     # Note that this could not be the best distance
     # Expects the 2 inputs to be connected by an edge, or else it will throw an exception
     def directDist(self, u, v):
-        if self.realDist[u][v] >= INFINITY:
-            raise Exception(f"directDist() was called with non adjacent vertices, ({u}, {v})")
-        return self.realDist[u][v]
+        return self.digraph.get_edge_data(u, v)
     
 
     def bestDist(self, u, v) :
@@ -72,35 +51,43 @@ class Graph:
     # TODO: MOVE TO ANOTHER MODULE AND ADD UNIT TESTS
     # Builds a shortest distance route from src to dest, that waits the needed time in the last vertex until it lasts t.
     # Uses Floyd's algorithm path reconstruction
-    def buildShortestRoute(self, src, dest, time, route: Route) :
-        if src != dest :
-            k = self.floydPath[src][dest]
-            self.buildShortestRoute(src, k , 0, route)
-            route.vertex.append(dest)
+    def buildShortestRoute(self, src, dest, time, route: Route):
+        assert route.vertex[-1] == src
+
+        path = []
+
+        curr = src
+        while curr != dest:
+            curr = self.floydPath[curr, dest]
+            path.append(curr)
+
+        for vertex in path:
+            route.vertex.append(vertex)
             route.time.append(0)
-            route.leaveTime.append(route.leaveTime[-1] + self.bestDistanceMatrix[k][dest])
+            route.leaveTime.append(route.leaveTime[-1] + self.bestDistanceMatrix[src][vertex])
+
         if time != 0 :
             route.time[-1] += time - self.bestDistanceMatrix[src][dest]
             route.leaveTime[-1] += time - self.bestDistanceMatrix[src][dest]
 
+
     
     def createGridGraph(self, n: int, distance: int):
+        self.digraph.add_nodes_from(range(n*n))
         self.V = n*n
+
         self.E = 2*2*n*(n-1)
-        self.adjList = [[] for _ in range(self.V)]
 
         ## Horizontal paths
         for row in range(0, self.V, n):
             for col in range(row + 1, row + n):
-                self.adjList[col - 1].append(Edge(col, 1))
-                self.adjList[col].append(Edge(col - 1, 1))
-
+                self.digraph.add_edge(col - 1, col, distance)
+                self.digraph.add_edge(col, col - 1, distance)
         ## Vertical paths
         for col in range(0, n):
             for row in range(col + n, col + self.V, n):
-                self.adjList[row - n].append(Edge(row, 1))
-                self.adjList[row].append(Edge(row - n, 1))
-
+                self.digraph.add_edge(row - n, row, distance)
+                self.digraph.add_edge(row, row - n, distance)
 
         self.applyFloyd()
 
@@ -120,9 +107,7 @@ def custom_graph_deserializer(graph_str: str) -> Graph:
     digraph = rx.parse_node_link_json(graph_str, edge_attrs=lambda x: int(x["dist"]))
     V = len(digraph.nodes())
     E = len(digraph.edge_list())
-    graph = Graph(V=V, E=E)
-    graph.digraph = digraph  
-    return graph
+    return Graph(digraph=digraph)
 
 
 # Create a custom Marshmallow field
@@ -131,7 +116,6 @@ class CustomGraphField(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
         # Use a custom encoder during serialization
         return custom_graph_serializer(value)
-    """
+    
     def _deserialize(self, value, attr, data, **kwargs):
         return custom_graph_deserializer(value)
-    """

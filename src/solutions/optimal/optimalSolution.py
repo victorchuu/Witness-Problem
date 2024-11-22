@@ -51,8 +51,10 @@ def optimalSolution(instance: Instance):
     while queue:
         priority, route = heapq.heappop(queue)
         if route.leaveTime[-1] >= instance.maxTime:
-            maximum = max(maximum, fitness(instance, route))
-            best_route = route
+            fit_value = fitness(instance, route)
+            if fit_value > maximum:
+                maximum = fit_value
+                best_route = route
 
         else:
             upper_bound = calculateUpperBound(instance, route)
@@ -60,7 +62,7 @@ def optimalSolution(instance: Instance):
                 continue
             current_vertex = route.vertex[-1]
 
-            for edge in instance.graph.adjList[current_vertex]:
+            for edge in instance.graph.get_adjacents(current_vertex):
                 new_route = Route(route.vertex[:], route.time[:], route.leaveTime[:])
                 new_route.vertex.append(edge.vertex)
                 new_route.time.append(0)

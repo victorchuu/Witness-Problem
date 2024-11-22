@@ -1,3 +1,4 @@
+import rustworkx as rx
 import unittest
 
 from src.witnessproblem import Graph, Edge
@@ -12,7 +13,6 @@ class TestGraph(unittest.TestCase):
         # Assert
         self.assertEqual(graph.V, 0)
         self.assertEqual(graph.E, 0)
-        self.assertEqual(graph.adjList, [[Edge]])
 
 
     def test_graph_create_grid_graph(self):
@@ -22,12 +22,25 @@ class TestGraph(unittest.TestCase):
         # Assert
         self.assertEqual(graph.V, 9)
         self.assertEqual(graph.E, 24)
-        self.assertEqual(len(graph.adjList), 9)
 
-        # Assert all distances are 1
-        self.assertTrue(all([edge.distance == 1 for edges in graph.adjList for edge in edges]))
+        self.assertTrue(all([graph.digraph.get_edge_data(edge[0],edge[1]) == 1 for edge in graph.digraph.edge_list()]))
 
-        print(graph.to_json())
+
+    def test_get_adjacents(self):
+        # Arrange        
+        graph = test_grid_graph()
+
+        # Act        
+        adjacents = graph.get_adjacents(4)
+
+        # Assert
+        self.assertEqual(len(adjacents), 4)
+        self.assertCountEqual(adjacents, [
+            Edge(1, 1),
+            Edge(3, 1),
+            Edge(5, 1),
+            Edge(7, 1)
+        ])
 
 
     def test_floyd_algorithm_in_grid_graph(self):
@@ -46,7 +59,8 @@ class TestGraph(unittest.TestCase):
             [3, 2, 3, 2, 1, 2, 1, 0, 1],
             [4, 3, 2, 3, 2, 1, 2, 1, 0]
         ]
-        self.assertEqual(graph.bestDistanceMatrix, expected_distance_matrix)
+
+        self.assertEquals(graph.bestDistanceMatrix, expected_distance_matrix)
 
 
     def test_direct_dist(self):
@@ -79,6 +93,7 @@ class TestGraph(unittest.TestCase):
         # Assert
         self.assertEqual(closest_vertex, 1)
         self.assertEqual(distance, 1)
+
 
 def test_grid_graph():
     graph = Graph()

@@ -1,7 +1,7 @@
 import unittest
 
 from src.solutions.optimal.optimalSolution import optimalSolution
-from src.witnessproblem import Graph, Instance, Testimony, RandomInstanceGenerator
+from src.witnessproblem import Graph, Instance, Testimony, RandomInstanceGenerator, Route, fitness
 
 class TestOptimalSolution(unittest.TestCase):
 
@@ -28,15 +28,16 @@ class TestOptimalSolution(unittest.TestCase):
 
     def test_on_randomly_generated_instances(self):
         # Arrange
-        with open('instances/tiny.txt') as inFile:
+        with open('instances/new-tiny.txt') as inFile:
             instances: list[Instance] = Instance.schema().loads(inFile.readline(), many=True)
             [instance.graph.applyFloyd() for instance in instances]
-
+        
         # Act
-        results = [optimalSolution(instance)[0] for instance in instances]
+        results = [optimalSolution(instance) for instance in instances]
 
         # Assert
-        self.assertEqual(results, [10, 12, 15, 15, 13, 13, 9, 12, 13, 16])
+        solutions = [pair[0] for pair in results]
+        self.assertEqual(solutions, [10, 12, 15, 15, 13, 13, 9, 12, 13, 16])
 
 
 TINY_INSTANCES = RandomInstanceGenerator(

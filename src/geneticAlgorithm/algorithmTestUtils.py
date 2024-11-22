@@ -45,12 +45,13 @@ def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=
 
         for i, instance in enumerate(instances):
 
-            if i < startIn:
-                continue
             if i == endIn:
                 break
 
             dataGatherer.start(instance)
+
+            if i < startIn:
+                continue
             instance.graph.applyFloyd()
 
             override_initial_pop = initial_population_with_greedy(instance, 150)

@@ -17,7 +17,7 @@ class Instance :
     graph: Graph = field(
         metadata=config(
             encoder=custom_graph_serializer,
-            #decoder=custom_graph_deserializer,
+            decoder=custom_graph_deserializer,
             mm_field=CustomGraphField()
         )
     )

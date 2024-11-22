@@ -37,7 +37,7 @@ def randomRouteRecursive(graph, src, dest, time, route: Route) :
         return route
 
 
-    possible_adjacents = [edge for edge in graph.adjList[src] 
+    possible_adjacents = [edge for edge in graph.get_adjacents(src) 
                          if edge.distance + graph.bestDist(edge.vertex, dest) <= time]
     edge = random.choice(possible_adjacents)
 

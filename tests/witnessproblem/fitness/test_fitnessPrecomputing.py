@@ -1,11 +1,15 @@
 import unittest
+import rustworkx as rx
+
 from src.witnessproblem.fitness.fitnessPrecomputing import FitnessPrecomputation, TestimonyEvent
 from src.witnessproblem import Graph, Instance, Testimony
 
 V1 = 0
 V2 = 1
 V3 = 2
-GRAPH = Graph(V=3, E=0, adjList=[[],[],[]])
+digraph = rx.PyDiGraph()
+digraph.add_nodes_from(range(3))
+GRAPH = Graph(digraph=digraph)
 TES1 = (0,0)
 TES2 = (1,0)
 
