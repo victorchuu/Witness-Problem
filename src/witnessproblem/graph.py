@@ -48,18 +48,22 @@ class Graph:
         return (destiny, distance)
 
 
-    # TODO: MOVE TO ANOTHER MODULE AND ADD UNIT TESTS
-    # Builds a shortest distance route from src to dest, that waits the needed time in the last vertex until it lasts t.
-    # Uses Floyd's algorithm path reconstruction
-    def buildShortestRoute(self, src, dest, time, route: Route):
-        assert route.vertex[-1] == src
-
+    def buildShortestPath(self, src, dest):
         path = []
 
         curr = src
         while curr != dest:
             curr = self.floydPath[curr, dest]
             path.append(curr)
+        
+        return path
+
+    # Builds a shortest distance route from src to dest, that waits the needed time in the last vertex until it lasts t.
+    # Uses Floyd's algorithm path reconstruction
+    def buildShortestRoute(self, src, dest, time, route: Route):
+        assert route.vertex[-1] == src
+
+        path = self.buildShortestPath(src, dest)
 
         for vertex in path:
             route.vertex.append(vertex)

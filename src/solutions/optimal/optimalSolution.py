@@ -33,8 +33,6 @@ def push_solution_if_worth_it(instance: Instance, route: Route, maximum: int, qu
     upper_bound = calculateUpperBound(instance, route)
     if upper_bound > maximum:
         heapq.heappush(queue, (-upper_bound * (route.leaveTime[-1] + 1), route))
-    else:
-        print(f"Skipping solution with time {route.leaveTime[-1]}")
 
 # The search algorithm iterates ALL the possible routes, and picks the one with best fitness
 # It starts with the routes consisting of just an initial vertex, and constructs all the possible routes
@@ -54,6 +52,7 @@ def optimalSolution(instance: Instance):
             fit_value = fitness(instance, route)
             if fit_value > maximum:
                 maximum = fit_value
+                print(f"New maximum: {maximum} for route[{route}]")
                 best_route = route
 
         else:

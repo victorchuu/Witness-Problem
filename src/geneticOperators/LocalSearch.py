@@ -46,7 +46,12 @@ class VisitedTestimonies() :
         self.since.reverse()
 
 
-
+"""
+Once a best neighbour is found, this method creates the route object of that neighbour.
+Such route is created by keeping the segments R[0...i] and R[j...n] of the original route,
+  and apppending the shortest path from i to j in between
+  R[0...i] + SHORTEST[I...j] + R[j...n]
+"""
 def createRoute(instance, route, bestIndex):
     if bestIndex == None:
         return route
@@ -54,7 +59,7 @@ def createRoute(instance, route, bestIndex):
     neighbour = Route()
     it = RouteIterator(route, neighbour)
     while it.index < i:
-        it.next(route, neighbour)                                        # < ---------- arrival time ---------- > - < --- leave time --- >
+        it.next(route, neighbour)
     instance.graph.buildShortestRoute(route.vertex[i], route.vertex[j], route.leaveTime[j] - route.leaveTime[i], neighbour)
     while it.index < j:
         it.next(route)
@@ -62,20 +67,33 @@ def createRoute(instance, route, bestIndex):
         pass
     return neighbour
 
-
-# Returns the testimonies visited by the route generated with buildShortestRoute()
+"""
+This function returns the set of testimonies visited by the shortest sub-route that goes from src to dest
+starting at time initialTime and ending at time endTime
+- It leverages Floyd algorithm precomputation to find the shortest path between src and dest
+- It leverages instance precumoutation to find the testimonies visited at a given vertex and time
+"""
 def getShortestRouteVisitedTestimonies(graph: Graph, precompute, src, dest, initialTime, endTime) :
 
     acc = set()
     acc |= precompute.collidingTestimoniesSet(dest, initialTime + graph.bestDistanceMatrix[src][dest], endTime)
 
-    while src != dest :
-        dest = graph.floydPath[src][dest]
-        time = initialTime + graph.bestDistanceMatrix[src][dest]
-        acc |= precompute.collidingTestimoniesSet(dest, time, time)
+    shortest_path = graph.buildShortestPath(src, dest)
+    for v in shortest_path:
+        time = initialTime + graph.bestDistanceMatrix[src][v]
+        acc |= precompute.collidingTestimoniesSet(v, time, time)
     return acc
 
-
+"""
+This function generates the best neighbour of a route.
+- To find the neighbours of a route, we will modify "small" segments of the route, 
+  by selecting all i < j combinations such that j - i < MAX_NEIGHBOUR_DIST
+  and inserting the shortest path between route[i] and route[j] in between.
+- We will then compute the fitness value of each neighbour and return the one with the best fitness value
+- Instead of creating each neighbour route and then calculating its fitness, we can calculate the fitness values
+  before creating the route, leveraging graph and instance precomputed values. We will only create the route
+  of the selected neighbour.
+"""
 def bestNeighbour(instance, route, bestFitness):
     visited_testimonies = VisitedTestimonies(instance, route)
     bestIndex = None
@@ -97,13 +115,18 @@ def bestNeighbour(instance, route, bestFitness):
     
     return createRoute(instance, route, bestIndex), bestFitness
         
-
+"""
+Generic local search algorithm schema
+- We find the neighbours of a route
+- We pick the one with best fitness value
+- If it is better than the current route, we replace it and repeat the process
+"""
 def localSearch(instance, route, bestFitness):
-    hits = 0 # Uncomment to test the improvements made by the local search in tests.ipynb
+    hits = 0
     while True:
         route, fit = bestNeighbour(instance, route, bestFitness)
         if fit > bestFitness:
             hits += 1
             bestFitness = fit
         else:
-            return route, bestFitness  , hits
+            return route, bestFitness, hits
