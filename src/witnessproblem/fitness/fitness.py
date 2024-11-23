@@ -16,16 +16,20 @@ def truthtellingWitnesses(instance, visitedTestimonies):
     return sum(1 for (witness, correct) in witnessMap.items() if correct==instance.precompute.positiveTestimoniesByWitness[witness])
 
 
-# Since collidingTestimoniesSet is cached, and expected to be O(1)
-# Then the fitness function becomes linear in the number of testimonies!
-def fitness(instance, route):
+def visited_testimonies(instance, route): 
     it = RouteIterator(route)
     visitedTestimonies = set()
     while True :        
         visitedTestimonies = visitedTestimonies | instance.precompute.collidingTestimoniesSet(it.vertex, it.a, it.b)
         if not it.next(route):
             break
-    return truthtellingWitnesses(instance, visitedTestimonies)
+    return visitedTestimonies  
+
+
+# Since collidingTestimoniesSet is cached, and expected to be O(1)
+# Then the fitness function becomes linear in the number of testimonies!
+def fitness(instance, route):
+    return truthtellingWitnesses(instance, visited_testimonies(instance, route))
 
 
 # deprecated

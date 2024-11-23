@@ -1,32 +1,29 @@
 from src.solutions.greedy import GreedyDistance, PersistentGreedyAlgorithm
-from src.witnessproblem import Instance, Route, fitness
+from src.witnessproblem import Instance, Route, fitness, truthtellingWitnesses, visited_testimonies
 from src.Algorithm import Algorithm
 import heapq
 
 
 MAX_VERTICES_IN_GRAPH = 20
 MAX_INSTANCE_TIME = 20
-FIXED_PRIORITY = 1
 
+def reachable_positive_testimonies(instance, vert, time) :
+    return {(witnessIdx, testimonyIdx) \
+        for witnessIdx, testimonies in enumerate(instance.testimoniesByWitness) \
+            for testimonyIdx, t in enumerate(testimonies) \
+                if (not t.negative) and (t.reachable(instance, vert, time))}
 
-def numberOfReachablePositiveTestimonies(instance, vert, time) :
-        positive_testimonies = [t for t in instance.getTestimonyList() if not t.negative]
-
-        count = 0
-        for T in positive_testimonies:
-            for v in T.possibleVertices :
-                if time + instance.graph.bestDist(vert, v) <= T.b :
-                    count += 1
-                    break
-        return count 
 
 """
-To calculate an upper bound, we add all the testimonies that the route already verifies, 
-together with the testimonies that the route can potentially verify, assuming an ideal scenario
-where a route satisfies them all.
+To calculate an upper bound for all posible children of the current subroute:
+- We add all the testimonies that the route already verifies-
+- We assume it will verify all the positive testimonies reachable from the last vertex
+- We assume it will not visit any negative testimony
+Then, we calculate all truthteller witnesses given these assumptions
 """
 def calculateUpperBound(instance: Instance, route: Route):
-    return fitness(instance, route) + numberOfReachablePositiveTestimonies(instance, route.vertex[-1], route.leaveTime[-1])
+    assumed_visited_testimonies = visited_testimonies(instance, route) | reachable_positive_testimonies(instance, route.vertex[-1], route.leaveTime[-1])
+    return truthtellingWitnesses(instance, assumed_visited_testimonies)
 
 
 def push_solution_if_worth_it(instance: Instance, route: Route, maximum: int, queue: list):
@@ -52,7 +49,6 @@ def optimalSolution(instance: Instance):
             fit_value = fitness(instance, route)
             if fit_value > maximum:
                 maximum = fit_value
-                print(f"New maximum: {maximum} for route[{route}]")
                 best_route = route
 
         else:

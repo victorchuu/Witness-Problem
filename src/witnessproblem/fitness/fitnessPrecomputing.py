@@ -86,7 +86,7 @@ class FitnessPrecomputation:
     # Fitness operation will be called a lot of times.
     # Since the output of this function only depends on the instance, not on the route, it is worth it to cache its results!
     @lru_cache(maxsize=None)
-    def collidingTestimoniesSet(self, vertex: int, begin: int, end: int):
+    def collidingTestimoniesSet(self, vertex: int, begin: int, end: int) -> set[TestimonyEvent]:
         eventList = self.eventsByVertex[vertex]
         id = firstFalseIndexBinarySerch(0, len(eventList), lambda i: eventList[i].eventTime < begin)
 

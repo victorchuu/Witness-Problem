@@ -1,4 +1,5 @@
 import random
+import rustworkx as rx
 
 from src.witnessproblem import Edge, Instance, Testimony, Graph
 
@@ -51,29 +52,29 @@ class RandomInstanceGenerator:
 
 
     def random_graph(self):
-        graph = Graph()
-        graph.V = self.vertices
-        graph.adjList = [[] for _ in range(self.vertices)]
-        graph.E = self.directed_edges
-        if self.undirected_graph and graph.E % 2 == 1 :
-            graph.E += 1
+        digraph = rx.PyDiGraph()
+        V = self.vertices
+        digraph.add_nodes_from(range(V))
+        E = self.directed_edges
+        if self.undirected_graph and E % 2 == 1 :
+            E += 1
 
         i = 0
-        while i < graph.E :
+        while i < E :
             u = random.randint(0, self.vertices - 1)
             v = random.randint(0, self.vertices - 1)
 
-            invalid_edge = u == v or any(edge.vertex == v for edge in graph.adjList[u])
+            invalid_edge = u == v or any(edge[1] == v for edge in digraph.out_edges(u))
             if invalid_edge: 
                 continue
 
             distance = random.randint(1, self.max_vertex_distance)
             i += 1
-            graph.adjList[u].append(Edge(v,distance))
+            digraph.add_edge(u, v, distance)
             if(self.undirected_graph) :
                 i += 1
-                graph.adjList[v].append(Edge(u,distance))
-        return graph
+                digraph.add_edge(v, u, distance)
+        return Graph(digraph=digraph)
 
     
     def random_witnesses(self, graph) :

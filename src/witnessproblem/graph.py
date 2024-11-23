@@ -109,8 +109,6 @@ def custom_graph_serializer(graph: Graph) -> str:
 
 def custom_graph_deserializer(graph_str: str) -> Graph:
     digraph = rx.parse_node_link_json(graph_str, edge_attrs=lambda x: int(x["dist"]))
-    V = len(digraph.nodes())
-    E = len(digraph.edge_list())
     return Graph(digraph=digraph)
 
 

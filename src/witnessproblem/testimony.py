@@ -34,7 +34,13 @@ class Testimony :
 
     def __lt__(self, other) :
         return self.a < other.a
-
+    
+    def reachable(self, instance, vert, time):
+        for v in self.possibleVertices:
+            if time + instance.graph.bestDist(vert, v) <= self.b:
+                return True
+        return False
+    
 
 # Uses random, not thought to be tested
 # TODO: Move to a separate file, together with random generation stuff
