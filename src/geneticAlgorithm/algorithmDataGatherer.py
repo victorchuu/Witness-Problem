@@ -18,7 +18,7 @@ class AlgorithmDataGatherer(ABC):
 
 
     @abstractmethod
-    def record_algorithm_data(self, algorithm, instance, override_initial_pop, repetitions):
+    def record_algorithm_data(self, algorithm, instance, repetitions, override_initial_pop=[]):
         pass
 
     @abstractmethod
@@ -52,7 +52,7 @@ class CSVDataGatherer(AlgorithmDataGatherer):
         self.elapsedTime = list()
 
 
-    def record_algorithm_data(self, algorithm, instance, override_initial_pop, repetitions):
+    def record_algorithm_data(self, algorithm, instance, repetitions, override_initial_pop=[]):
 
         startTime = time.time()
         print("-",end='')
@@ -111,7 +111,7 @@ class RealisticInstanceDataGatherer(AlgorithmDataGatherer):
         self.original_fitness = fitness(instance, actor_route)
 
 
-    def record_algorithm_data(self, algorithm, instance, override_initial_pop, repetitions):
+    def record_algorithm_data(self, algorithm, instance, repetitions, override_initial_pop=[]):
 
         startTime = time.time()
         print("-",end='')

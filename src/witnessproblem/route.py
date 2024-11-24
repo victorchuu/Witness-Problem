@@ -27,6 +27,24 @@ class Route:
 
     def __gt__(self, other):
         return True 
+    
+    def assert_correct(self, instance):
+
+        if self.leaveTime[-1] != instance.maxTime:
+            print(f"Route {self} is not correct. Leave time: {self.leaveTime[-1]} != {instance.maxTime}")
+            assert False
+
+        SUM = 0
+        for i in range(len(self.vertex) - 1):
+            SUM += self.time[i]
+            SUM += instance.graph.directDist(self.vertex[i], self.vertex[i + 1])
+
+        SUM += self.time[-1]
+
+        if SUM != instance.maxTime:
+            print(f"Route {self} is not correct. Sum: {SUM} != {instance.maxTime}")
+            assert False
+
 
 
 def createStaticRoute(vertex: int, time: int):

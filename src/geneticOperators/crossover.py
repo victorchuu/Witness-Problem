@@ -9,7 +9,7 @@ def crossover(instance, p1, p2) :
     return succesor(instance, p1, p2) , succesor(instance, p2, p1)
 
 
-def succesor(instance: Instance, p1: Route, p2: Route) :
+def succesor(instance: Instance, p1: Route, p2: Route):
     graph = instance.graph
     son = Route()
 

@@ -65,10 +65,12 @@ class Graph:
 
         path = self.buildShortestPath(src, dest)
 
+        previous_vertex = src
         for vertex in path:
             route.vertex.append(vertex)
             route.time.append(0)
-            route.leaveTime.append(route.leaveTime[-1] + self.bestDistanceMatrix[src][vertex])
+            route.leaveTime.append(route.leaveTime[-1] + self.bestDistanceMatrix[previous_vertex][vertex])
+            previous_vertex = vertex
 
         if time != 0 :
             route.time[-1] += time - self.bestDistanceMatrix[src][dest]

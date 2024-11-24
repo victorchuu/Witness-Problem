@@ -56,7 +56,7 @@ def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=
 
             override_initial_pop = initial_population_with_greedy(instance, 150)
             for alg, repetitions in algorithms:
-                dataGatherer.record_algorithm_data(alg, instance, override_initial_pop, repetitions)
+                dataGatherer.record_algorithm_data(alg, instance, repetitions, override_initial_pop=override_initial_pop)
                 
             dataGatherer.write_data(i)
             print(f"Finished instance #{i} at {datetime.datetime.now().strftime('%H:%M:%S')}")
