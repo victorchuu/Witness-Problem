@@ -122,11 +122,9 @@ Generic local search algorithm schema
 - If it is better than the current route, we replace it and repeat the process
 """
 def localSearch(instance, route, bestFitness):
-    hits = 0
     while True:
         route, fit = bestNeighbour(instance, route, bestFitness)
         if fit > bestFitness:
-            hits += 1
             bestFitness = fit
         else:
-            return route, bestFitness, hits
+            return route, bestFitness

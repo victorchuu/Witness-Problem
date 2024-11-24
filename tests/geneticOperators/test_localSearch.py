@@ -12,12 +12,11 @@ class LocalSearchTests(unittest.TestCase):
         fit_value = fitness(instance, route)
 
         # Act
-        new_route, new_fit_value, iterations = localSearch(instance, route, fit_value)
+        new_route, new_fit_value = localSearch(instance, route, fit_value)
 
         # Assert
         self.assertEqual(fit_value, 1)
         self.assertEqual(new_fit_value, 5)
-        self.assertEqual(iterations, 1)
         self.assertEqual(new_route.vertex, [3, 4, 5, 8, 7])
 
 
@@ -28,12 +27,11 @@ class LocalSearchTests(unittest.TestCase):
         fit_value = fitness(instance, route)
 
         # Act
-        new_route, new_fit_value, iterations = localSearch(instance, route, fit_value)
+        new_route, new_fit_value = localSearch(instance, route, fit_value)
 
         # Assert
         self.assertEqual(fit_value, 5)
         self.assertEqual(new_fit_value, 8)
-        self.assertEqual(iterations, 2)
         self.assertEqual(new_route.vertex, [5, 4, 5, 8, 7])
 
 
