@@ -114,7 +114,7 @@ I1 = RandomInstanceGenerator(
     max_interval_length = 4, 
     max_vertices_per_testimony = 1, 
     negative_testimonies_rate = 0
-    )
+)
 
 I2 = RandomInstanceGenerator(
     vertices = 20, 
@@ -126,8 +126,7 @@ I2 = RandomInstanceGenerator(
     max_interval_length = 10, 
     max_vertices_per_testimony = 2, 
     negative_testimonies_rate = 0
-    )
-
+)
 
 I3 = RandomInstanceGenerator(
     vertices = 100, 
@@ -139,9 +138,21 @@ I3 = RandomInstanceGenerator(
     max_interval_length = 10, 
     max_vertices_per_testimony = 5, 
     negative_testimonies_rate = 0
-    )
+)
 
 I4 = RandomInstanceGenerator(
+    vertices = 250, 
+    avg_vertex_degree = 25, 
+    max_vertex_distance = 20, 
+    witnesses = 250, 
+    max_testimonies_per_witness = 5, 
+    max_time_window = 500, 
+    max_interval_length = 50, 
+    max_vertices_per_testimony = 5, 
+    negative_testimonies_rate = 0
+)
+
+I5 = RandomInstanceGenerator(
     vertices = 500, 
     avg_vertex_degree = 10, 
     max_vertex_distance = 10, 
@@ -151,9 +162,33 @@ I4 = RandomInstanceGenerator(
     max_interval_length = 20, 
     max_vertices_per_testimony = 5, 
     negative_testimonies_rate = 0
+)
+
+I6 = RandomInstanceGenerator(
+    vertices = 15, 
+    avg_vertex_degree = 5, 
+    max_vertex_distance = 5, 
+    witnesses = 50, 
+    max_testimonies_per_witness = 1, 
+    max_time_window = 12, 
+    max_interval_length = 4, 
+    max_vertices_per_testimony = 1, 
+    negative_testimonies_rate = 0.3
+)
+
+I7 = RandomInstanceGenerator(
+    vertices = 50, 
+    avg_vertex_degree = 10, 
+    max_vertex_distance = 5, 
+    witnesses = 250, 
+    max_testimonies_per_witness = 5, 
+    max_time_window = 500, 
+    max_interval_length = 20, 
+    max_vertices_per_testimony = 5, 
+    negative_testimonies_rate = 0.3
     )
 
-I5 = RandomInstanceGenerator(
+I8 = RandomInstanceGenerator(
     vertices = 100, 
     avg_vertex_degree = 10, 
     max_vertex_distance = 10, 
@@ -163,4 +198,28 @@ I5 = RandomInstanceGenerator(
     max_interval_length = 10, 
     max_vertices_per_testimony = 5, 
     negative_testimonies_rate = 0.3
-    )
+)
+
+I9 = RandomInstanceGenerator(
+    vertices = 250, 
+    avg_vertex_degree = 25, 
+    max_vertex_distance = 10, 
+    witnesses = 250, 
+    max_testimonies_per_witness = 5, 
+    max_time_window = 500, 
+    max_interval_length = 20, 
+    max_vertices_per_testimony = 5,
+    negative_testimonies_rate = 0.3
+)
+
+I10 = RandomInstanceGenerator(
+    vertices = 500, 
+    avg_vertex_degree = 10, 
+    max_vertex_distance = 10, 
+    witnesses = 500, 
+    max_testimonies_per_witness = 2, 
+    max_time_window = 200, 
+    max_interval_length = 20, 
+    max_vertices_per_testimony = 2, 
+    negative_testimonies_rate = 0.5
+)
