@@ -1,7 +1,7 @@
 from src.witnessproblem import Graph, Instance, Testimony
 
 def get_tiny_instances():
-    with open('instances/new-tiny.txt') as inFile:
+    with open('instances/tiny.txt') as inFile:
         instances: list[Instance] = Instance.schema().loads(inFile.readline(), many=True)
         [instance.graph.applyFloyd() for instance in instances]
     return instances

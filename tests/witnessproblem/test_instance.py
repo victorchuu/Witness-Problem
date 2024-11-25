@@ -43,7 +43,7 @@ class TestInstance(unittest.TestCase):
     # Execute this only if using custom_graph_deserializer
     def test_new_format_deserialize(self):
         # Arrange
-        with open('instances/new-tiny.txt') as inFile:
+        with open('instances/tiny.txt') as inFile:
             serialized_instances = inFile.readline()
         
         # Act
