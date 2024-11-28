@@ -1,5 +1,9 @@
 from src.witnessproblem import Graph, Interval, Route, RouteIterator, Testimony
 
+
+"""
+Deprecated - A new, more efficient fitness function has been implemented
+"""
 class TestimonyVerifier:
 
 

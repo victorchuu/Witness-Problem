@@ -3,6 +3,9 @@ from src.witnessproblem import Instance, Route
 from .randomRoute import appendRandomRoute
 
 
+"""
+Generates #size random routes valid for the input instance
+"""
 def initial_population(instance: Instance, size: int):
     population = []    
     for j in range(size) :
@@ -11,6 +14,10 @@ def initial_population(instance: Instance, size: int):
     return population
 
 
+"""
+Generates #size random routes valid for the input instance, among wich 20 are generated using the GreedyDistance algorithm.
+This is helpful to let the evolutionary algorithms contain some partially good solutions from the start.
+"""
 def initial_population_with_greedy(instance: Instance, size: int):
     times_distance = 20
 

@@ -5,10 +5,21 @@ from src.utils.binarySearch import *
 import random
 
 
+"""
+Performs crossover operator between two parent routes p1 and p2.
+Outputs two children routes.
+"""
 def crossover(instance, p1, p2) :          
     return succesor(instance, p1, p2) , succesor(instance, p2, p1)
 
 
+"""
+Performs the crossover operator between two parent routes p1 and p2 as described in the article.
+Outputs a child route that is a mix of both parents:
+- Starts copying the route of p1
+- At some point chosen randomly, moves to collide with the route p2
+- Continues copying the route of p2 until the end
+"""
 def succesor(instance: Instance, p1: Route, p2: Route):
     graph = instance.graph
     son = Route()

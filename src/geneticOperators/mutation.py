@@ -6,6 +6,12 @@ from .randomRoute import appendRandomRoute, NO_VERTEX_SELECTED
 MAX_MUTATION_INTERVAL = 10
 
 
+"""
+Mutates a route between two a randomly selected vertices i and j. Creates a random route in-between.
+In case i > j, instead the mutated parts of the route are:
+- The beginning of the route till j
+- i till the end of the route
+"""
 def mutate(instance, route) :
 
     if len(route.vertex) < 2 :

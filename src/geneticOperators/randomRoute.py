@@ -7,6 +7,11 @@ from src.witnessproblem import Graph, Route
 NO_VERTEX_SELECTED = -1
 
 
+"""
+Appends a randomly generated route to the route object, such that it reaches `dest` vertex in the graph in `time` units of time.
+If `dest` is not specified, it will be randomly selected. 
+If the route is empty, a starting vertex will be randomly selected.
+"""
 def appendRandomRoute(graph: Graph, dest, time, route: Route) :
     
     if len(route) > 0:

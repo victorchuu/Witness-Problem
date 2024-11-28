@@ -6,30 +6,57 @@ from src.realisticCase import RealisticCaseSolutionData
 from src.witnessproblem import fitness, Route
 
 
+"""
+Depending on the type of experiments that we want to perform, we will want to gather different information from the algorithms.
+This class implements the basic interface of a data gatherer, which will be used to gather data from the algorithms.
+"""
 class AlgorithmDataGatherer(ABC):
 
+    """
+    Executed at the beginning of the experiments, it is used to initialize the output files and other needed assets.
+    """
     @abstractmethod
     def __enter__(self):
         pass    
 
+    """
+    Method executed at the beginning of each instance. It is used to initialize the data structures that will be used to store the data of a particular instance.
+    """
     @abstractmethod
     def start(self, instance):
         pass
 
-
+    """
+    Multiple algorithms can be studied on the same execution. This method will be invoked once per instance, per algorithm.
+    `repetitions` indicates how many times the algorithm will me ran on the same instance.
+    `override_initial_pop` is a list of routes that will be used as the initial population of the genetic algorithm.
+    This method should store the data of the algorithm execution on the data structures initialized by the `start` method, doing the required aggregations (e.g. average execution time across all repetitions)
+    """
     @abstractmethod
     def record_algorithm_data(self, algorithm, instance, repetitions, override_initial_pop=[]):
         pass
 
+    """
+    Method executed at the end of each instance. It is used to write the data gathered from the algorithms to the output file.
+    """
     @abstractmethod
     def write_data(self, index):
         pass
         
+    """
+    Executed at the end of the experiments, it is used to close the output files and other needed assets.
+    """
     @abstractmethod
     def __exit__(self):
         pass
 
 
+"""
+Captures:
+- Average solution obtained by each algorithm
+- Maximum solution obtained by each algorithm
+- Average time taken by each algorithm
+"""
 class CSVDataGatherer(AlgorithmDataGatherer):
 
 
@@ -77,7 +104,13 @@ class CSVDataGatherer(AlgorithmDataGatherer):
 
 
 
-
+"""
+Used for the Case Study. Captures:
+- Average solution obtained by each algorithm
+- Maximum solution obtained by each algorithm
+- Average time taken by each algorithm
+- Average correct end vertex predictions of each algorithm
+"""
 class RealisticInstanceDataGatherer(AlgorithmDataGatherer):
 
 

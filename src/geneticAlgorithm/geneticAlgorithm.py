@@ -6,6 +6,11 @@ from src.geneticOperators import initial_population, crossover, mutate, localSea
 from src.witnessproblem import fitness
 
 
+"""
+Implementation of an evolutinary algorithm schema, including a localSearch operator (allowing to make this a Memetic Algorithm). 
+The implementations allws the usage of differten genetic operators and parameters by specifying them in the constructor.
+Invoke the algorithm with .run(instance)
+"""
 class GeneticAlgorithm(Algorithm):
         def __init__(self, 
                      mutation = mutate, 

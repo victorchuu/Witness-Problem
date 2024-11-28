@@ -34,6 +34,12 @@ def executeAlgorithmsGraph(algorithms: List[GeneticAlgorithm], filename, legend)
             plt.legend()
 
 
+"""
+Executes a list of algorithms, on all the instances given on an instance set file.
+- getDataGatherer implements AlgorithmDataGatherer, and is used to output data from the algorithms.
+- suffix is used to name the output file.
+- startIn and endIn can be used to select which instances on the set to run the algorithms on.
+"""
 def executeAlgorithms(algorithms, filename, getDataGatherer, suffix='', startIn=0, endIn=-1):
     output_file = 'solutions/' + filename + suffix + '.csv'
 
