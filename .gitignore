@@ -1,11 +1,9 @@
 .DS_Store
 *.png
 *.pyc
-*.csv
 .vscode/*
 .ipynb_checkpoints/*
 tests.ipynb
 
 *.rda
 *.Rdata
-solutions/*
